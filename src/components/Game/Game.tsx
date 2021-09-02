@@ -10,7 +10,7 @@ export const Game = () => {
   return (
     <div>
       <button onClick={() => setName('')}>Clear Name</button>
-      <SpeechBox text={`Hello ${name}. How are you today?`} />
+      <SpeechBox text={`Hello ${name}. Let's get started!`} />
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <Rect

@@ -4,7 +4,7 @@ let utterance = new SpeechSynthesisUtterance();
 speechSynthesis.onvoiceschanged = () => {
   voices = speechSynthesis.getVoices();
   voices = voices.filter((v) => v.lang === 'en-US');
-  utterance.voice = voices[5];
+  utterance.voice = voices[3];
 };
 
 export const speak = (

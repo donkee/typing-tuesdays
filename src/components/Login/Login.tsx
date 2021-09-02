@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { nameState } from '../../atoms';
-import './FirstStartup.scss';
+import './Login.scss';
 
-export const FirstStartup = () => {
-  const [recoilName, setRecoilName] = useRecoilState<string>(nameState);
+export const Login = () => {
+  const setRecoilName = useSetRecoilState(nameState);
   const [name, setName] = useState<string>('');
 
   return (
