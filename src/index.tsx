@@ -1,8 +1,13 @@
-import * as React from 'react';
-import * as ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { RecoilRoot } from 'recoil';
 import App from './App';
-import "./styles.scss";
+import './styles.scss';
 
-
-var mountNode = document.getElementById("app");
-ReactDOM.render(<App />, mountNode);
+var mountNode = document.getElementById('app');
+ReactDOM.render(
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>,
+  mountNode
+);

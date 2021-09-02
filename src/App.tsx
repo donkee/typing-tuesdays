@@ -1,40 +1,13 @@
-import * as React from 'react';
-import { Layer, Rect, Stage } from 'react-konva';
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { nameState } from './atoms';
+import { FirstStartup } from './components/FirstStartup/FirstStartup';
+import { Game } from './components/Game/Game';
 
 const App = () => {
-  let voices = speechSynthesis.getVoices();
+  const name = useRecoilValue(nameState);
 
-  speechSynthesis.onvoiceschanged = () => {
-    voices = speechSynthesis.getVoices();
-    voices = voices.filter((v) => v.lang === 'en-US');
-  };
-
-  const speak = () => {
-    let utterance = new SpeechSynthesisUtterance();
-    utterance.text = 'click on the rectangle';
-    utterance.voice = voices[5];
-    utterance.lang = 'en-us';
-    speechSynthesis.speak(utterance);
-  };
-
-  return (
-    <div>
-      <button onClick={speak}>Speak</button>
-      <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
-          <Rect
-            x={20}
-            y={50}
-            width={100}
-            height={100}
-            fill='red'
-            shadowBlur={10}
-            onClick={() => alert('Great job!')}
-          />
-        </Layer>
-      </Stage>
-    </div>
-  );
+  return name === '' ? <FirstStartup /> : <Game />;
 };
 
 export default App;
