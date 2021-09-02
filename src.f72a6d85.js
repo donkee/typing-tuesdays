@@ -196,4 +196,4 @@ var r=require("./lib/dom-to-react"),t=require("./lib/attributes-to-props"),e=req
 },{"react":"HdMw","recoil":"j5Dr","./atoms":"FTKH","./components/Game/Game":"y3e6","./components/Login/Login":"ZKqf"}],"OGgv":[function(require,module,exports) {
 "use strict";var e=l(require("react")),r=l(require("react-dom")),t=require("recoil"),u=l(require("./App"));function l(e){return e&&e.__esModule?e:{default:e}}require("./styles.scss");var a=document.getElementById("app");r.default.render(e.default.createElement(t.RecoilRoot,null,e.default.createElement(u.default,null)),a);
 },{"react":"HdMw","react-dom":"X9zx","recoil":"j5Dr","./App":"Ru8j","./styles.scss":"Kh3h"}]},{},["OGgv"], null)
-//# sourceMappingURL=/src.f72a6d85.js.map
+//# sourceMappingURL=https://donkeedong.github.io/typing-tuesdays/src.f72a6d85.js.map
