@@ -37336,9 +37336,9 @@ exports.nameState = void 0;
 var _recoil = require("recoil");
 
 var localStorageEffect = function localStorageEffect(key) {
-  return function (_a) {
-    var setSelf = _a.setSelf,
-        onSet = _a.onSet;
+  return function (_ref) {
+    var setSelf = _ref.setSelf,
+        onSet = _ref.onSet;
     var savedValue = localStorage.getItem(key);
 
     if (savedValue != null) {
@@ -37361,7 +37361,96 @@ var nameState = (0, _recoil.atom)({
   effects_UNSTABLE: [localStorageEffect('name')]
 });
 exports.nameState = nameState;
-},{"recoil":"node_modules/recoil/es/recoil.js"}],"node_modules/konva/lib/Global.js":[function(require,module,exports) {
+},{"recoil":"node_modules/recoil/es/recoil.js"}],"node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],"node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":[function(require,module,exports) {
+function _iterableToArrayLimit(arr, i) {
+  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+  if (_i == null) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+
+  var _s, _e;
+
+  try {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],"node_modules/@babel/runtime/helpers/arrayLikeToArray.js":[function(require,module,exports) {
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],"node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":[function(require,module,exports) {
+var arrayLikeToArray = require("./arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./arrayLikeToArray.js":"node_modules/@babel/runtime/helpers/arrayLikeToArray.js"}],"node_modules/@babel/runtime/helpers/nonIterableRest.js":[function(require,module,exports) {
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],"node_modules/@babel/runtime/helpers/slicedToArray.js":[function(require,module,exports) {
+var arrayWithHoles = require("./arrayWithHoles.js");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray.js");
+
+var nonIterableRest = require("./nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./arrayWithHoles.js":"node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit.js":"node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray.js":"node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest.js":"node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"node_modules/konva/lib/Global.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -71973,22 +72062,33 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.speak = void 0;
-var voices = speechSynthesis.getVoices();
+var allVoices = speechSynthesis.getVoices();
 var utterance = new SpeechSynthesisUtterance();
+var allVoicesObtained = new Promise(function (resolve, reject) {
+  allVoices = speechSynthesis.getVoices();
 
-speechSynthesis.onvoiceschanged = function () {
-  voices = speechSynthesis.getVoices();
-  voices = voices.filter(function (v) {
-    return v.lang === 'en-US';
-  });
-  utterance.voice = voices[3];
-};
+  if (allVoices.length !== 0) {
+    resolve(allVoices.filter(function (v) {
+      return v.lang === 'en-US';
+    }));
+  } else {
+    speechSynthesis.addEventListener('voiceschanged', function () {
+      allVoices = speechSynthesis.getVoices();
+      resolve(allVoices.filter(function (v) {
+        return v.lang === 'en-US';
+      }));
+    });
+  }
+});
 
 var speak = function speak(text, handleBoundary, handleEnd) {
-  utterance.text = text;
-  utterance.addEventListener('boundary', handleBoundary);
-  utterance.addEventListener('end', handleEnd);
-  speechSynthesis.speak(utterance);
+  allVoicesObtained.then(function (voices) {
+    utterance.text = text;
+    utterance.voice = voices[3];
+    utterance.addEventListener('boundary', handleBoundary);
+    utterance.addEventListener('end', handleEnd);
+    speechSynthesis.speak(utterance);
+  });
 };
 
 exports.speak = speak;
@@ -72004,6 +72104,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SpeechBox = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _htmlReactParser = _interopRequireDefault(require("html-react-parser"));
 
@@ -72021,9 +72123,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var SpeechBox = function SpeechBox(props) {
   // this code is modified from https://codersblock.com/blog/javascript-text-to-speech-and-its-many-quirks/
-  var _a = (0, _react.useState)(props.text),
-      markedText = _a[0],
-      setMarkedText = _a[1];
+  var _useState = (0, _react.useState)(props.text),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      markedText = _useState2[0],
+      setMarkedText = _useState2[1];
 
   var handleBoundary = function handleBoundary(event) {
     if (event.target === 'sentence') {
@@ -72064,7 +72167,7 @@ var SpeechText = function SpeechText(props) {
     className: 'speech'
   }, (0, _htmlReactParser.default)(props.text));
 };
-},{"html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Game/Game.scss":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Game/Game.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -72076,6 +72179,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Game = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -72094,9 +72199,10 @@ require("./Game.scss");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Game = function Game() {
-  var _a = (0, _recoil.useRecoilState)(_atoms.nameState),
-      name = _a[0],
-      setName = _a[1];
+  var _useRecoilState = (0, _recoil.useRecoilState)(_atoms.nameState),
+      _useRecoilState2 = (0, _slicedToArray2.default)(_useRecoilState, 2),
+      name = _useRecoilState2[0],
+      setName = _useRecoilState2[1];
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: 'game'
@@ -72107,7 +72213,7 @@ var Game = function Game() {
       return setName('');
     }
   }, "Clear Name"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
-    text: "Hello " + name + ". Let's get started!"
+    text: "Hello ".concat(name, ". Let's get started!")
   })), /*#__PURE__*/_react.default.createElement(_reactKonva.Stage, {
     height: 1000,
     width: 1000
@@ -72132,7 +72238,7 @@ var Game = function Game() {
 };
 
 exports.Game = Game;
-},{"react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Game.scss":"src/components/Game/Game.scss"}],"src/components/Textbox/Textbox.scss":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Game.scss":"src/components/Game/Game.scss"}],"src/components/Textbox/Textbox.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -72176,6 +72282,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Login = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _react = _interopRequireWildcard(require("react"));
 
 var _recoil = require("recoil");
@@ -72194,12 +72302,15 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var Login = function Login() {
   var setRecoilName = (0, _recoil.useSetRecoilState)(_atoms.nameState);
 
-  var _a = (0, _react.useState)(''),
-      name = _a[0],
-      setName = _a[1];
+  var _useState = (0, _react.useState)(''),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      name = _useState2[0],
+      setName = _useState2[1];
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: 'startup'
@@ -72224,7 +72335,7 @@ var Login = function Login() {
 };
 
 exports.Login = Login;
-},{"react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","../Textbox/Textbox":"src/components/Textbox/Textbox.tsx","./Login.scss":"src/components/Login/Login.scss"}],"src/App.tsx":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","../Textbox/Textbox":"src/components/Textbox/Textbox.tsx","./Login.scss":"src/components/Login/Login.scss"}],"src/App.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72302,7 +72413,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46225" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45477" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
