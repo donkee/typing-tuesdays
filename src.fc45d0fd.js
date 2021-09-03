@@ -69608,7 +69608,102 @@ Object.keys(_ReactKonvaCore).forEach(function (key) {
     }
   });
 });
-},{"konva":"node_modules/konva/lib/index.js","./ReactKonvaCore":"node_modules/react-konva/es/ReactKonvaCore.js"}],"node_modules/react-property/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports) {
+},{"konva":"node_modules/konva/lib/index.js","./ReactKonvaCore":"node_modules/react-konva/es/ReactKonvaCore.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/Button/Button.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Button/Button.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Button = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./Button.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Button = function Button(props) {
+  return /*#__PURE__*/_react.default.createElement("button", {
+    className: 'button',
+    type: props.type,
+    onClick: props.onClick
+  }, props.children);
+};
+
+exports.Button = Button;
+},{"react":"node_modules/react/index.js","./Button.scss":"src/components/Button/Button.scss"}],"node_modules/react-property/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports) {
 module.exports = {
   Properties: {
     autoFocus: 4,
@@ -71897,74 +71992,7 @@ var speak = function speak(text, handleBoundary, handleEnd) {
 };
 
 exports.speak = speak;
-},{}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/SpeechBox/SpeechBox.scss":[function(require,module,exports) {
+},{}],"src/components/SpeechBox/SpeechBox.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -71993,7 +72021,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var SpeechBox = function SpeechBox(props) {
   // this code is modified from https://codersblock.com/blog/javascript-text-to-speech-and-its-many-quirks/
-  var _a = (0, _react.useState)(''),
+  var _a = (0, _react.useState)(props.text),
       markedText = _a[0],
       setMarkedText = _a[1];
 
@@ -72032,9 +72060,16 @@ var SpeechBox = function SpeechBox(props) {
 exports.SpeechBox = SpeechBox;
 
 var SpeechText = function SpeechText(props) {
-  return /*#__PURE__*/_react.default.createElement("div", null, (0, _htmlReactParser.default)(props.text));
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: 'speech'
+  }, (0, _htmlReactParser.default)(props.text));
 };
-},{"html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Game/Game.tsx":[function(require,module,exports) {
+},{"html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Game/Game.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Game/Game.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72050,7 +72085,11 @@ var _recoil = require("recoil");
 
 var _atoms = require("../../atoms");
 
+var _Button = require("../Button/Button");
+
 var _SpeechBox = require("../SpeechBox/SpeechBox");
+
+require("./Game.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72059,22 +72098,33 @@ var Game = function Game() {
       name = _a[0],
       setName = _a[1];
 
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: 'game'
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: 'controls'
+  }, /*#__PURE__*/_react.default.createElement(_Button.Button, {
     onClick: function onClick() {
       return setName('');
     }
   }, "Clear Name"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
     text: "Hello " + name + ". Let's get started!"
-  }), /*#__PURE__*/_react.default.createElement(_reactKonva.Stage, {
-    width: window.innerWidth,
-    height: window.innerHeight
+  })), /*#__PURE__*/_react.default.createElement(_reactKonva.Stage, {
+    height: 1000,
+    width: 1000
   }, /*#__PURE__*/_react.default.createElement(_reactKonva.Layer, null, /*#__PURE__*/_react.default.createElement(_reactKonva.Rect, {
+    x: 0,
+    y: 0,
+    width: 1000,
+    height: 1000,
+    fill: 'rgba(255, 255, 255, 0.1)',
+    shadowBlur: 10
+  }), /*#__PURE__*/_react.default.createElement(_reactKonva.Rect, {
     x: 20,
     y: 50,
     width: 100,
     height: 100,
     fill: 'red',
-    shadowBlur: 10,
+    shadowBlur: 20,
     onClick: function onClick() {
       return alert('Great job!');
     }
@@ -72082,7 +72132,38 @@ var Game = function Game() {
 };
 
 exports.Game = Game;
-},{"react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx"}],"src/components/Login/Login.scss":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Game.scss":"src/components/Game/Game.scss"}],"src/components/Textbox/Textbox.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Textbox/Textbox.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Textbox = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./Textbox.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Textbox = function Textbox(props) {
+  return /*#__PURE__*/_react.default.createElement("input", {
+    className: 'textbox',
+    type: 'text',
+    name: props.name,
+    value: props.value,
+    onChange: props.onChange,
+    autoFocus: props.autofocus
+  });
+};
+
+exports.Textbox = Textbox;
+},{"react":"node_modules/react/index.js","./Textbox.scss":"src/components/Textbox/Textbox.scss"}],"src/components/Login/Login.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -72101,6 +72182,12 @@ var _recoil = require("recoil");
 
 var _atoms = require("../../atoms");
 
+var _Button = require("../Button/Button");
+
+var _SpeechBox = require("../SpeechBox/SpeechBox");
+
+var _Textbox = require("../Textbox/Textbox");
+
 require("./Login.scss");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -72116,25 +72203,28 @@ var Login = function Login() {
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: 'startup'
-  }, "Hello! What is your name?", /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("input", {
-    type: 'text',
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: 'title'
+  }, "Typing", /*#__PURE__*/_react.default.createElement("br", null), "Tuesdays"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
+    text: 'Hello! Please type your name'
+  }), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement(_Textbox.Textbox, {
     name: 'name',
     onChange: function onChange(e) {
       return setName(e.target.value);
     },
-    value: name
-  }), /*#__PURE__*/_react.default.createElement("input", {
+    value: name,
+    autofocus: true
+  }), /*#__PURE__*/_react.default.createElement(_Button.Button, {
     type: 'submit',
-    value: 'Start!',
     onClick: function onClick(e) {
       e.preventDefault();
       setRecoilName(name);
     }
-  })));
+  }, "Start!")));
 };
 
 exports.Login = Login;
-},{"react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","./Login.scss":"src/components/Login/Login.scss"}],"src/App.tsx":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","../Textbox/Textbox":"src/components/Textbox/Textbox.tsx","./Login.scss":"src/components/Login/Login.scss"}],"src/App.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72212,7 +72302,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34929" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46225" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
