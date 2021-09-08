@@ -1,4 +1,12 @@
-mark {
-  color: #000000;
-  background-color: #f4d03f;
+.speech {
+  text-shadow: 0 0 10px #ffffff;
+  font-size: 36px;
+
+  mark {
+    color: white;
+    text-shadow: #fff 0px 0px 5px, #fff 0px 0px 10px, #fff 0px 0px 15px,
+      red 0px 0px 20px, red 0px 0px 30px, red 0px 0px 40px, red 0px 0px 50px,
+      red 0px 0px 75px;
+    background-color: transparent;
+  }
 }

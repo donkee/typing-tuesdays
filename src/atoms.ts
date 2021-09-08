@@ -22,3 +22,16 @@ export const nameState = atom({
   default: '',
   effects_UNSTABLE: [localStorageEffect('name')]
 });
+
+export const gameStateAtom = atom<GameState>({
+  key: 'gameState',
+  default: 'title',
+  // cancel any speaking when the game state changes
+  effects_UNSTABLE: [
+    ({ onSet }) => {
+      onSet((v) => speechSynthesis.cancel());
+    }
+  ]
+});
+
+export type GameState = 'title' | 'menu' | 'shapes' | 'letters';

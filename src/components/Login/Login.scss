@@ -2,10 +2,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 36px;
+  text-shadow: 0 0 10px #ffffff;
+  align-self: center;
+
+  .title {
+    font-size: 96px;
+    color: #55ff00;
+    font-weight: bold;
+    text-shadow: 0px 0px 0 rgb(13, 183, 0), 1px 1px 0 rgb(-4, 166, 0),
+      2px 2px 0 rgb(-22, 148, 0), 3px 3px 0 rgb(-39, 131, 0),
+      4px 4px 0 rgb(-57, 113, 0), 5px 5px 0 rgb(-74, 96, 0),
+      6px 6px 0 rgb(-92, 78, 0), 7px 7px 0 rgb(-110, 60, 0),
+      8px 8px 0 rgb(-127, 43, 0), 9px 9px 0 rgb(-145, 25, 0),
+      10px 10px 0 rgb(-162, 8, 0), 11px 11px 0 rgb(-180, -10, 0),
+      12px 12px 0 rgb(-198, -28, 0), 13px 13px 12px rgba(0, 4, 255, 0.6),
+      13px 13px 1px rgba(0, 4, 255, 0.5), 0px 0px 12px rgba(0, 4, 255, 0.2);
+    transform: rotateZ(-15deg);
+    margin-top: 32px;
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .speech {
+    margin: 24px;
+  }
 
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    > * {
+      margin: 24px;
+    }
   }
 }

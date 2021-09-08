@@ -4,12 +4,21 @@ import { speak } from '../../utils/Speech';
 import './SpeechBox.scss';
 
 interface SpeechBoxProps {
-  text: string;
+  script: string[];
 }
 
 export const SpeechBox = (props: SpeechBoxProps) => {
   // this code is modified from https://codersblock.com/blog/javascript-text-to-speech-and-its-many-quirks/
-  const [markedText, setMarkedText] = useState<string>('');
+  const [markedText, setMarkedText] = useState<string>(props.script[0]);
+  const [currentText, setCurrentText] = useState(props.script[0]);
+  let i: number = 0;
+
+  const incrementText = () => {
+    if (i < props.script.length - 1) {
+      i++;
+      setCurrentText(props.script[i]);
+    }
+  };
 
   const handleBoundary = (event: any) => {
     if (event.target === 'sentence') {
@@ -22,30 +31,39 @@ export const SpeechBox = (props: SpeechBoxProps) => {
     let wordLength = event.charLength;
     if (wordLength === undefined) {
       // Safari doesn't provide charLength, so fall back to a regex to find the current word and its length (probably misses some edge cases, but good enough for this demo)
-      const match = props.text.substring(wordStart).match(/^[a-z\d']*/i);
+      const match = currentText.substring(wordStart).match(/^[a-z\d']*/i);
       if (match === null || match.length === 0) return;
       wordLength = match[0].length;
     }
 
     // wrap word in <mark> tag
     const wordEnd = wordStart + wordLength;
-    const word = props.text.substring(wordStart, wordEnd);
+    const word = currentText.substring(wordStart, wordEnd);
     setMarkedText(
-      props.text.substring(0, wordStart) +
+      currentText.substring(0, wordStart) +
         '<mark>' +
         word +
         '</mark>' +
-        props.text.substring(wordEnd)
+        currentText.substring(wordEnd)
     );
   };
 
+  // speak the text
   useEffect(() => {
-    speak(props.text, handleBoundary, () => setMarkedText(props.text));
-  }, []);
+    speak(currentText, handleBoundary, () => {
+      setMarkedText(currentText);
+      incrementText();
+    });
+  }, [currentText]);
+
+  // update the current text if the script changes
+  useEffect(() => {
+    setCurrentText(props.script[0]);
+  }, [props.script]);
 
   return <SpeechText text={markedText} />;
 };
 
 const SpeechText = (props: { text: string }) => {
-  return <div>{parse(props.text)}</div>;
+  return <div className={'speech'}>{parse(props.text)}</div>;
 };
