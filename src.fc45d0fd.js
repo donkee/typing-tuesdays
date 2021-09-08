@@ -37325,43 +37325,7 @@ var Recoil_index_35 = Recoil_index.snapshot_UNSTABLE;
 exports.snapshot_UNSTABLE = Recoil_index_35;
 var _default = Recoil_index;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js"}],"src/atoms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.nameState = void 0;
-
-var _recoil = require("recoil");
-
-var localStorageEffect = function localStorageEffect(key) {
-  return function (_ref) {
-    var setSelf = _ref.setSelf,
-        onSet = _ref.onSet;
-    var savedValue = localStorage.getItem(key);
-
-    if (savedValue != null) {
-      setSelf(JSON.parse(savedValue));
-    }
-
-    onSet(function (newValue) {
-      if (newValue instanceof _recoil.DefaultValue) {
-        localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key, JSON.stringify(newValue));
-      }
-    });
-  };
-};
-
-var nameState = (0, _recoil.atom)({
-  key: 'nameState',
-  default: '',
-  effects_UNSTABLE: [localStorageEffect('name')]
-});
-exports.nameState = nameState;
-},{"recoil":"node_modules/recoil/es/recoil.js"}],"node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js"}],"node_modules/@babel/runtime/helpers/arrayWithHoles.js":[function(require,module,exports) {
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
 }
@@ -37450,7 +37414,2702 @@ function _slicedToArray(arr, i) {
 
 module.exports = _slicedToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayWithHoles.js":"node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit.js":"node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray.js":"node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest.js":"node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"node_modules/konva/lib/Global.js":[function(require,module,exports) {
+},{"./arrayWithHoles.js":"node_modules/@babel/runtime/helpers/arrayWithHoles.js","./iterableToArrayLimit.js":"node_modules/@babel/runtime/helpers/iterableToArrayLimit.js","./unsupportedIterableToArray.js":"node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js","./nonIterableRest.js":"node_modules/@babel/runtime/helpers/nonIterableRest.js"}],"src/atoms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.gameStateAtom = exports.nameState = void 0;
+
+var _recoil = require("recoil");
+
+var localStorageEffect = function localStorageEffect(key) {
+  return function (_ref) {
+    var setSelf = _ref.setSelf,
+        onSet = _ref.onSet;
+    var savedValue = localStorage.getItem(key);
+
+    if (savedValue != null) {
+      setSelf(JSON.parse(savedValue));
+    }
+
+    onSet(function (newValue) {
+      if (newValue instanceof _recoil.DefaultValue) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      }
+    });
+  };
+};
+
+var nameState = (0, _recoil.atom)({
+  key: 'nameState',
+  default: '',
+  effects_UNSTABLE: [localStorageEffect('name')]
+});
+exports.nameState = nameState;
+var gameStateAtom = (0, _recoil.atom)({
+  key: 'gameState',
+  default: 'title',
+  // cancel any speaking when the game state changes
+  effects_UNSTABLE: [function (_ref2) {
+    var onSet = _ref2.onSet;
+    onSet(function (v) {
+      return speechSynthesis.cancel();
+    });
+  }]
+});
+exports.gameStateAtom = gameStateAtom;
+},{"recoil":"node_modules/recoil/es/recoil.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/Button/Button.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Button/Button.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Button = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./Button.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Button = function Button(_ref) {
+  var _ref$type = _ref.type,
+      type = _ref$type === void 0 ? 'button' : _ref$type,
+      onClick = _ref.onClick,
+      children = _ref.children;
+  return /*#__PURE__*/_react.default.createElement("button", {
+    className: 'button',
+    type: type,
+    onClick: onClick
+  }, children);
+};
+
+exports.Button = Button;
+},{"react":"node_modules/react/index.js","./Button.scss":"src/components/Button/Button.scss"}],"node_modules/react-property/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports) {
+module.exports = {
+  Properties: {
+    autoFocus: 4,
+    accept: 0,
+    acceptCharset: 0,
+    accessKey: 0,
+    action: 0,
+    allowFullScreen: 4,
+    allowTransparency: 0,
+    alt: 0,
+    as: 0,
+    async: 4,
+    autoComplete: 0,
+    autoPlay: 4,
+    capture: 4,
+    cellPadding: 0,
+    cellSpacing: 0,
+    charSet: 0,
+    challenge: 0,
+    checked: 5,
+    cite: 0,
+    classID: 0,
+    className: 0,
+    cols: 24,
+    colSpan: 0,
+    content: 0,
+    contentEditable: 0,
+    contextMenu: 0,
+    controls: 4,
+    controlsList: 0,
+    coords: 0,
+    crossOrigin: 0,
+    data: 0,
+    dateTime: 0,
+    default: 4,
+    defer: 4,
+    dir: 0,
+    disabled: 4,
+    download: 32,
+    draggable: 0,
+    encType: 0,
+    form: 0,
+    formAction: 0,
+    formEncType: 0,
+    formMethod: 0,
+    formNoValidate: 4,
+    formTarget: 0,
+    frameBorder: 0,
+    headers: 0,
+    height: 0,
+    hidden: 4,
+    high: 0,
+    href: 0,
+    hrefLang: 0,
+    htmlFor: 0,
+    httpEquiv: 0,
+    icon: 0,
+    id: 0,
+    inputMode: 0,
+    integrity: 0,
+    is: 0,
+    keyParams: 0,
+    keyType: 0,
+    kind: 0,
+    label: 0,
+    lang: 0,
+    list: 0,
+    loop: 4,
+    low: 0,
+    manifest: 0,
+    marginHeight: 0,
+    marginWidth: 0,
+    max: 0,
+    maxLength: 0,
+    media: 0,
+    mediaGroup: 0,
+    method: 0,
+    min: 0,
+    minLength: 0,
+    multiple: 5,
+    muted: 5,
+    name: 0,
+    nonce: 0,
+    noValidate: 4,
+    open: 4,
+    optimum: 0,
+    pattern: 0,
+    placeholder: 0,
+    playsInline: 4,
+    poster: 0,
+    preload: 0,
+    profile: 0,
+    radioGroup: 0,
+    readOnly: 4,
+    referrerPolicy: 0,
+    rel: 0,
+    required: 4,
+    reversed: 4,
+    role: 0,
+    rows: 24,
+    rowSpan: 8,
+    sandbox: 0,
+    scope: 0,
+    scoped: 4,
+    scrolling: 0,
+    seamless: 4,
+    selected: 5,
+    shape: 0,
+    size: 24,
+    sizes: 0,
+    span: 24,
+    spellCheck: 0,
+    src: 0,
+    srcDoc: 0,
+    srcLang: 0,
+    srcSet: 0,
+    start: 8,
+    step: 0,
+    style: 0,
+    summary: 0,
+    tabIndex: 0,
+    target: 0,
+    title: 0,
+    type: 0,
+    useMap: 0,
+    value: 0,
+    width: 0,
+    wmode: 0,
+    wrap: 0,
+    about: 0,
+    datatype: 0,
+    inlist: 0,
+    prefix: 0,
+    property: 0,
+    resource: 0,
+    typeof: 0,
+    vocab: 0,
+    autoCapitalize: 0,
+    autoCorrect: 0,
+    autoSave: 0,
+    color: 0,
+    itemProp: 0,
+    itemScope: 4,
+    itemType: 0,
+    itemID: 0,
+    itemRef: 0,
+    results: 0,
+    security: 0,
+    unselectable: 0
+  },
+  DOMAttributeNames: {
+    acceptCharset: 'accept-charset',
+    className: 'class',
+    htmlFor: 'for',
+    httpEquiv: 'http-equiv'
+  }
+};
+
+},{}],"node_modules/react-property/lib/SVGDOMPropertyConfig.js":[function(require,module,exports) {
+module.exports = {
+  Properties: {
+    accentHeight: 0,
+    accumulate: 0,
+    additive: 0,
+    alignmentBaseline: 0,
+    allowReorder: 0,
+    alphabetic: 0,
+    amplitude: 0,
+    arabicForm: 0,
+    ascent: 0,
+    attributeName: 0,
+    attributeType: 0,
+    autoReverse: 0,
+    azimuth: 0,
+    baseFrequency: 0,
+    baseProfile: 0,
+    baselineShift: 0,
+    bbox: 0,
+    begin: 0,
+    bias: 0,
+    by: 0,
+    calcMode: 0,
+    capHeight: 0,
+    clip: 0,
+    clipPath: 0,
+    clipRule: 0,
+    clipPathUnits: 0,
+    colorInterpolation: 0,
+    colorInterpolationFilters: 0,
+    colorProfile: 0,
+    colorRendering: 0,
+    contentScriptType: 0,
+    contentStyleType: 0,
+    cursor: 0,
+    cx: 0,
+    cy: 0,
+    d: 0,
+    decelerate: 0,
+    descent: 0,
+    diffuseConstant: 0,
+    direction: 0,
+    display: 0,
+    divisor: 0,
+    dominantBaseline: 0,
+    dur: 0,
+    dx: 0,
+    dy: 0,
+    edgeMode: 0,
+    elevation: 0,
+    enableBackground: 0,
+    end: 0,
+    exponent: 0,
+    externalResourcesRequired: 0,
+    fill: 0,
+    fillOpacity: 0,
+    fillRule: 0,
+    filter: 0,
+    filterRes: 0,
+    filterUnits: 0,
+    floodColor: 0,
+    floodOpacity: 0,
+    focusable: 0,
+    fontFamily: 0,
+    fontSize: 0,
+    fontSizeAdjust: 0,
+    fontStretch: 0,
+    fontStyle: 0,
+    fontVariant: 0,
+    fontWeight: 0,
+    format: 0,
+    from: 0,
+    fx: 0,
+    fy: 0,
+    g1: 0,
+    g2: 0,
+    glyphName: 0,
+    glyphOrientationHorizontal: 0,
+    glyphOrientationVertical: 0,
+    glyphRef: 0,
+    gradientTransform: 0,
+    gradientUnits: 0,
+    hanging: 0,
+    horizAdvX: 0,
+    horizOriginX: 0,
+    ideographic: 0,
+    imageRendering: 0,
+    in: 0,
+    in2: 0,
+    intercept: 0,
+    k: 0,
+    k1: 0,
+    k2: 0,
+    k3: 0,
+    k4: 0,
+    kernelMatrix: 0,
+    kernelUnitLength: 0,
+    kerning: 0,
+    keyPoints: 0,
+    keySplines: 0,
+    keyTimes: 0,
+    lengthAdjust: 0,
+    letterSpacing: 0,
+    lightingColor: 0,
+    limitingConeAngle: 0,
+    local: 0,
+    markerEnd: 0,
+    markerMid: 0,
+    markerStart: 0,
+    markerHeight: 0,
+    markerUnits: 0,
+    markerWidth: 0,
+    mask: 0,
+    maskContentUnits: 0,
+    maskUnits: 0,
+    mathematical: 0,
+    mode: 0,
+    numOctaves: 0,
+    offset: 0,
+    opacity: 0,
+    operator: 0,
+    order: 0,
+    orient: 0,
+    orientation: 0,
+    origin: 0,
+    overflow: 0,
+    overlinePosition: 0,
+    overlineThickness: 0,
+    paintOrder: 0,
+    panose1: 0,
+    pathLength: 0,
+    patternContentUnits: 0,
+    patternTransform: 0,
+    patternUnits: 0,
+    pointerEvents: 0,
+    points: 0,
+    pointsAtX: 0,
+    pointsAtY: 0,
+    pointsAtZ: 0,
+    preserveAlpha: 0,
+    preserveAspectRatio: 0,
+    primitiveUnits: 0,
+    r: 0,
+    radius: 0,
+    refX: 0,
+    refY: 0,
+    renderingIntent: 0,
+    repeatCount: 0,
+    repeatDur: 0,
+    requiredExtensions: 0,
+    requiredFeatures: 0,
+    restart: 0,
+    result: 0,
+    rotate: 0,
+    rx: 0,
+    ry: 0,
+    scale: 0,
+    seed: 0,
+    shapeRendering: 0,
+    slope: 0,
+    spacing: 0,
+    specularConstant: 0,
+    specularExponent: 0,
+    speed: 0,
+    spreadMethod: 0,
+    startOffset: 0,
+    stdDeviation: 0,
+    stemh: 0,
+    stemv: 0,
+    stitchTiles: 0,
+    stopColor: 0,
+    stopOpacity: 0,
+    strikethroughPosition: 0,
+    strikethroughThickness: 0,
+    string: 0,
+    stroke: 0,
+    strokeDasharray: 0,
+    strokeDashoffset: 0,
+    strokeLinecap: 0,
+    strokeLinejoin: 0,
+    strokeMiterlimit: 0,
+    strokeOpacity: 0,
+    strokeWidth: 0,
+    surfaceScale: 0,
+    systemLanguage: 0,
+    tableValues: 0,
+    targetX: 0,
+    targetY: 0,
+    textAnchor: 0,
+    textDecoration: 0,
+    textRendering: 0,
+    textLength: 0,
+    to: 0,
+    transform: 0,
+    u1: 0,
+    u2: 0,
+    underlinePosition: 0,
+    underlineThickness: 0,
+    unicode: 0,
+    unicodeBidi: 0,
+    unicodeRange: 0,
+    unitsPerEm: 0,
+    vAlphabetic: 0,
+    vHanging: 0,
+    vIdeographic: 0,
+    vMathematical: 0,
+    values: 0,
+    vectorEffect: 0,
+    version: 0,
+    vertAdvY: 0,
+    vertOriginX: 0,
+    vertOriginY: 0,
+    viewBox: 0,
+    viewTarget: 0,
+    visibility: 0,
+    widths: 0,
+    wordSpacing: 0,
+    writingMode: 0,
+    x: 0,
+    xHeight: 0,
+    x1: 0,
+    x2: 0,
+    xChannelSelector: 0,
+    xlinkActuate: 0,
+    xlinkArcrole: 0,
+    xlinkHref: 0,
+    xlinkRole: 0,
+    xlinkShow: 0,
+    xlinkTitle: 0,
+    xlinkType: 0,
+    xmlBase: 0,
+    xmlns: 0,
+    xmlnsXlink: 0,
+    xmlLang: 0,
+    xmlSpace: 0,
+    y: 0,
+    y1: 0,
+    y2: 0,
+    yChannelSelector: 0,
+    z: 0,
+    zoomAndPan: 0
+  },
+  DOMAttributeNames: {
+    accentHeight: 'accent-height',
+    alignmentBaseline: 'alignment-baseline',
+    arabicForm: 'arabic-form',
+    baselineShift: 'baseline-shift',
+    capHeight: 'cap-height',
+    clipPath: 'clip-path',
+    clipRule: 'clip-rule',
+    colorInterpolation: 'color-interpolation',
+    colorInterpolationFilters: 'color-interpolation-filters',
+    colorProfile: 'color-profile',
+    colorRendering: 'color-rendering',
+    dominantBaseline: 'dominant-baseline',
+    enableBackground: 'enable-background',
+    fillOpacity: 'fill-opacity',
+    fillRule: 'fill-rule',
+    floodColor: 'flood-color',
+    floodOpacity: 'flood-opacity',
+    fontFamily: 'font-family',
+    fontSize: 'font-size',
+    fontSizeAdjust: 'font-size-adjust',
+    fontStretch: 'font-stretch',
+    fontStyle: 'font-style',
+    fontVariant: 'font-variant',
+    fontWeight: 'font-weight',
+    glyphName: 'glyph-name',
+    glyphOrientationHorizontal: 'glyph-orientation-horizontal',
+    glyphOrientationVertical: 'glyph-orientation-vertical',
+    horizAdvX: 'horiz-adv-x',
+    horizOriginX: 'horiz-origin-x',
+    imageRendering: 'image-rendering',
+    letterSpacing: 'letter-spacing',
+    lightingColor: 'lighting-color',
+    markerEnd: 'marker-end',
+    markerMid: 'marker-mid',
+    markerStart: 'marker-start',
+    overlinePosition: 'overline-position',
+    overlineThickness: 'overline-thickness',
+    paintOrder: 'paint-order',
+    panose1: 'panose-1',
+    pointerEvents: 'pointer-events',
+    renderingIntent: 'rendering-intent',
+    shapeRendering: 'shape-rendering',
+    stopColor: 'stop-color',
+    stopOpacity: 'stop-opacity',
+    strikethroughPosition: 'strikethrough-position',
+    strikethroughThickness: 'strikethrough-thickness',
+    strokeDasharray: 'stroke-dasharray',
+    strokeDashoffset: 'stroke-dashoffset',
+    strokeLinecap: 'stroke-linecap',
+    strokeLinejoin: 'stroke-linejoin',
+    strokeMiterlimit: 'stroke-miterlimit',
+    strokeOpacity: 'stroke-opacity',
+    strokeWidth: 'stroke-width',
+    textAnchor: 'text-anchor',
+    textDecoration: 'text-decoration',
+    textRendering: 'text-rendering',
+    underlinePosition: 'underline-position',
+    underlineThickness: 'underline-thickness',
+    unicodeBidi: 'unicode-bidi',
+    unicodeRange: 'unicode-range',
+    unitsPerEm: 'units-per-em',
+    vAlphabetic: 'v-alphabetic',
+    vHanging: 'v-hanging',
+    vIdeographic: 'v-ideographic',
+    vMathematical: 'v-mathematical',
+    vectorEffect: 'vector-effect',
+    vertAdvY: 'vert-adv-y',
+    vertOriginX: 'vert-origin-x',
+    vertOriginY: 'vert-origin-y',
+    wordSpacing: 'word-spacing',
+    writingMode: 'writing-mode',
+    xHeight: 'x-height',
+    xlinkActuate: 'xlink:actuate',
+    xlinkArcrole: 'xlink:arcrole',
+    xlinkHref: 'xlink:href',
+    xlinkRole: 'xlink:role',
+    xlinkShow: 'xlink:show',
+    xlinkTitle: 'xlink:title',
+    xlinkType: 'xlink:type',
+    xmlBase: 'xml:base',
+    xmlnsXlink: 'xmlns:xlink',
+    xmlLang: 'xml:lang',
+    xmlSpace: 'xml:space'
+  }
+};
+
+},{}],"node_modules/react-property/lib/injection.js":[function(require,module,exports) {
+module.exports = {
+  MUST_USE_PROPERTY: 1,
+  HAS_BOOLEAN_VALUE: 4,
+  HAS_NUMERIC_VALUE: 8,
+  HAS_POSITIVE_NUMERIC_VALUE: 24,
+  HAS_OVERLOADED_BOOLEAN_VALUE: 32
+};
+
+},{}],"node_modules/react-property/index.js":[function(require,module,exports) {
+var HTMLDOMPropertyConfig = require('./lib/HTMLDOMPropertyConfig');
+var SVGDOMPropertyConfig = require('./lib/SVGDOMPropertyConfig');
+var injection = require('./lib/injection');
+
+var MUST_USE_PROPERTY = injection.MUST_USE_PROPERTY;
+var HAS_BOOLEAN_VALUE = injection.HAS_BOOLEAN_VALUE;
+var HAS_NUMERIC_VALUE = injection.HAS_NUMERIC_VALUE;
+var HAS_POSITIVE_NUMERIC_VALUE = injection.HAS_POSITIVE_NUMERIC_VALUE;
+var HAS_OVERLOADED_BOOLEAN_VALUE = injection.HAS_OVERLOADED_BOOLEAN_VALUE;
+
+/**
+ * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/DOMProperty.js#L14-L16
+ *
+ * @param  {Number}  value
+ * @param  {Number}  bitmask
+ * @return {Boolean}
+ */
+function checkMask(value, bitmask) {
+  return (value & bitmask) === bitmask;
+}
+
+/**
+ * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/DOMProperty.js#L57
+ *
+ * @param {Object}  domPropertyConfig - HTMLDOMPropertyConfig or SVGDOMPropertyConfig
+ * @param {Object}  config            - The object to be mutated
+ * @param {Boolean} isSVG             - Whether the injected config is HTML or SVG (it assumes the default is HTML)
+ */
+function injectDOMPropertyConfig(domPropertyConfig, config, isSVG) {
+  var Properties = domPropertyConfig.Properties;
+  var DOMAttributeNames = domPropertyConfig.DOMAttributeNames;
+  var attributeName;
+  var propertyName;
+  var propConfig;
+
+  for (propertyName in Properties) {
+    attributeName =
+      DOMAttributeNames[propertyName] ||
+      (isSVG ? propertyName : propertyName.toLowerCase());
+    propConfig = Properties[propertyName];
+
+    config[attributeName] = {
+      attributeName: attributeName,
+      propertyName: propertyName,
+      mustUseProperty: checkMask(propConfig, MUST_USE_PROPERTY),
+      hasBooleanValue: checkMask(propConfig, HAS_BOOLEAN_VALUE),
+      hasNumericValue: checkMask(propConfig, HAS_NUMERIC_VALUE),
+      hasPositiveNumericValue: checkMask(
+        propConfig,
+        HAS_POSITIVE_NUMERIC_VALUE
+      ),
+      hasOverloadedBooleanValue: checkMask(
+        propConfig,
+        HAS_OVERLOADED_BOOLEAN_VALUE
+      )
+    };
+  }
+}
+
+/**
+ * HTML properties config.
+ *
+ * @type {Object}
+ */
+var html = {};
+injectDOMPropertyConfig(HTMLDOMPropertyConfig, html);
+
+/**
+ * SVG properties config.
+ *
+ * @type {Object}
+ */
+var svg = {};
+injectDOMPropertyConfig(SVGDOMPropertyConfig, svg, true);
+
+/**
+ * HTML and SVG properties config.
+ *
+ * @type {Object}
+ */
+var properties = {};
+injectDOMPropertyConfig(HTMLDOMPropertyConfig, properties);
+injectDOMPropertyConfig(SVGDOMPropertyConfig, properties, true);
+
+var ATTRIBUTE_NAME_START_CHAR =
+  ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
+var ATTRIBUTE_NAME_CHAR =
+  ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040';
+
+module.exports = {
+  html: html,
+  svg: svg,
+  properties: properties,
+
+  /**
+   * Checks whether a property name is a custom attribute.
+   *
+   * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/HTMLDOMPropertyConfig.js#L23-L25
+   *
+   * @param {String}
+   * @return {Boolean}
+   */
+  isCustomAttribute: RegExp.prototype.test.bind(
+    new RegExp('^(data|aria)-[' + ATTRIBUTE_NAME_CHAR + ']*$')
+  )
+};
+
+},{"./lib/HTMLDOMPropertyConfig":"node_modules/react-property/lib/HTMLDOMPropertyConfig.js","./lib/SVGDOMPropertyConfig":"node_modules/react-property/lib/SVGDOMPropertyConfig.js","./lib/injection":"node_modules/react-property/lib/injection.js"}],"node_modules/inline-style-parser/index.js":[function(require,module,exports) {
+// http://www.w3.org/TR/CSS21/grammar.html
+// https://github.com/visionmedia/css-parse/pull/49#issuecomment-30088027
+var COMMENT_REGEX = /\/\*[^*]*\*+([^/*][^*]*\*+)*\//g;
+
+var NEWLINE_REGEX = /\n/g;
+var WHITESPACE_REGEX = /^\s*/;
+
+// declaration
+var PROPERTY_REGEX = /^(\*?[-#/*\\\w]+(\[[0-9a-z_-]+\])?)\s*/;
+var COLON_REGEX = /^:\s*/;
+var VALUE_REGEX = /^((?:'(?:\\'|.)*?'|"(?:\\"|.)*?"|\([^)]*?\)|[^};])+)/;
+var SEMICOLON_REGEX = /^[;\s]*/;
+
+// https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
+var TRIM_REGEX = /^\s+|\s+$/g;
+
+// strings
+var NEWLINE = '\n';
+var FORWARD_SLASH = '/';
+var ASTERISK = '*';
+var EMPTY_STRING = '';
+
+// types
+var TYPE_COMMENT = 'comment';
+var TYPE_DECLARATION = 'declaration';
+
+/**
+ * @param {String} style
+ * @param {Object} [options]
+ * @return {Object[]}
+ * @throws {TypeError}
+ * @throws {Error}
+ */
+module.exports = function(style, options) {
+  if (typeof style !== 'string') {
+    throw new TypeError('First argument must be a string');
+  }
+
+  if (!style) return [];
+
+  options = options || {};
+
+  /**
+   * Positional.
+   */
+  var lineno = 1;
+  var column = 1;
+
+  /**
+   * Update lineno and column based on `str`.
+   *
+   * @param {String} str
+   */
+  function updatePosition(str) {
+    var lines = str.match(NEWLINE_REGEX);
+    if (lines) lineno += lines.length;
+    var i = str.lastIndexOf(NEWLINE);
+    column = ~i ? str.length - i : column + str.length;
+  }
+
+  /**
+   * Mark position and patch `node.position`.
+   *
+   * @return {Function}
+   */
+  function position() {
+    var start = { line: lineno, column: column };
+    return function(node) {
+      node.position = new Position(start);
+      whitespace();
+      return node;
+    };
+  }
+
+  /**
+   * Store position information for a node.
+   *
+   * @constructor
+   * @property {Object} start
+   * @property {Object} end
+   * @property {undefined|String} source
+   */
+  function Position(start) {
+    this.start = start;
+    this.end = { line: lineno, column: column };
+    this.source = options.source;
+  }
+
+  /**
+   * Non-enumerable source string.
+   */
+  Position.prototype.content = style;
+
+  var errorsList = [];
+
+  /**
+   * Error `msg`.
+   *
+   * @param {String} msg
+   * @throws {Error}
+   */
+  function error(msg) {
+    var err = new Error(
+      options.source + ':' + lineno + ':' + column + ': ' + msg
+    );
+    err.reason = msg;
+    err.filename = options.source;
+    err.line = lineno;
+    err.column = column;
+    err.source = style;
+
+    if (options.silent) {
+      errorsList.push(err);
+    } else {
+      throw err;
+    }
+  }
+
+  /**
+   * Match `re` and return captures.
+   *
+   * @param {RegExp} re
+   * @return {undefined|Array}
+   */
+  function match(re) {
+    var m = re.exec(style);
+    if (!m) return;
+    var str = m[0];
+    updatePosition(str);
+    style = style.slice(str.length);
+    return m;
+  }
+
+  /**
+   * Parse whitespace.
+   */
+  function whitespace() {
+    match(WHITESPACE_REGEX);
+  }
+
+  /**
+   * Parse comments.
+   *
+   * @param {Object[]} [rules]
+   * @return {Object[]}
+   */
+  function comments(rules) {
+    var c;
+    rules = rules || [];
+    while ((c = comment())) {
+      if (c !== false) {
+        rules.push(c);
+      }
+    }
+    return rules;
+  }
+
+  /**
+   * Parse comment.
+   *
+   * @return {Object}
+   * @throws {Error}
+   */
+  function comment() {
+    var pos = position();
+    if (FORWARD_SLASH != style.charAt(0) || ASTERISK != style.charAt(1)) return;
+
+    var i = 2;
+    while (
+      EMPTY_STRING != style.charAt(i) &&
+      (ASTERISK != style.charAt(i) || FORWARD_SLASH != style.charAt(i + 1))
+    ) {
+      ++i;
+    }
+    i += 2;
+
+    if (EMPTY_STRING === style.charAt(i - 1)) {
+      return error('End of comment missing');
+    }
+
+    var str = style.slice(2, i - 2);
+    column += 2;
+    updatePosition(str);
+    style = style.slice(i);
+    column += 2;
+
+    return pos({
+      type: TYPE_COMMENT,
+      comment: str
+    });
+  }
+
+  /**
+   * Parse declaration.
+   *
+   * @return {Object}
+   * @throws {Error}
+   */
+  function declaration() {
+    var pos = position();
+
+    // prop
+    var prop = match(PROPERTY_REGEX);
+    if (!prop) return;
+    comment();
+
+    // :
+    if (!match(COLON_REGEX)) return error("property missing ':'");
+
+    // val
+    var val = match(VALUE_REGEX);
+
+    var ret = pos({
+      type: TYPE_DECLARATION,
+      property: trim(prop[0].replace(COMMENT_REGEX, EMPTY_STRING)),
+      value: val
+        ? trim(val[0].replace(COMMENT_REGEX, EMPTY_STRING))
+        : EMPTY_STRING
+    });
+
+    // ;
+    match(SEMICOLON_REGEX);
+
+    return ret;
+  }
+
+  /**
+   * Parse declarations.
+   *
+   * @return {Object[]}
+   */
+  function declarations() {
+    var decls = [];
+
+    comments(decls);
+
+    // declarations
+    var decl;
+    while ((decl = declaration())) {
+      if (decl !== false) {
+        decls.push(decl);
+        comments(decls);
+      }
+    }
+
+    return decls;
+  }
+
+  whitespace();
+  return declarations();
+};
+
+/**
+ * Trim `str`.
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function trim(str) {
+  return str ? str.replace(TRIM_REGEX, EMPTY_STRING) : EMPTY_STRING;
+}
+
+},{}],"node_modules/style-to-object/index.js":[function(require,module,exports) {
+var parse = require('inline-style-parser');
+
+/**
+ * Parses inline style to object.
+ *
+ * @example
+ * // returns { 'line-height': '42' }
+ * StyleToObject('line-height: 42;');
+ *
+ * @param  {String}      style      - The inline style.
+ * @param  {Function}    [iterator] - The iterator function.
+ * @return {null|Object}
+ */
+function StyleToObject(style, iterator) {
+  var output = null;
+  if (!style || typeof style !== 'string') {
+    return output;
+  }
+
+  var declaration;
+  var declarations = parse(style);
+  var hasIterator = typeof iterator === 'function';
+  var property;
+  var value;
+
+  for (var i = 0, len = declarations.length; i < len; i++) {
+    declaration = declarations[i];
+    property = declaration.property;
+    value = declaration.value;
+
+    if (hasIterator) {
+      iterator(property, value, declaration);
+    } else if (value) {
+      output || (output = {});
+      output[property] = value;
+    }
+  }
+
+  return output;
+}
+
+module.exports = StyleToObject;
+
+},{"inline-style-parser":"node_modules/inline-style-parser/index.js"}],"node_modules/style-to-js/cjs/utilities.js":[function(require,module,exports) {
+"use strict";
+exports.__esModule = true;
+exports.camelCase = void 0;
+var CUSTOM_PROPERTY_REGEX = /^--[a-zA-Z0-9-]+$/;
+var HYPHEN_REGEX = /-([a-z])/g;
+var NO_HYPHEN_REGEX = /^[^-]+$/;
+var VENDOR_PREFIX_REGEX = /^-(webkit|moz|ms|o|khtml)-/;
+var skipCamelCase = function (property) {
+    return !property ||
+        NO_HYPHEN_REGEX.test(property) ||
+        CUSTOM_PROPERTY_REGEX.test(property);
+};
+var capitalize = function (match, character) {
+    return character.toUpperCase();
+};
+var trimHyphen = function (match, prefix) { return prefix + "-"; };
+var camelCase = function (property, options) {
+    if (options === void 0) { options = {}; }
+    if (skipCamelCase(property)) {
+        return property;
+    }
+    property = property.toLowerCase();
+    if (!options.reactCompat) {
+        property = property.replace(VENDOR_PREFIX_REGEX, trimHyphen);
+    }
+    return property.replace(HYPHEN_REGEX, capitalize);
+};
+exports.camelCase = camelCase;
+
+},{}],"node_modules/style-to-js/cjs/index.js":[function(require,module,exports) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+exports.__esModule = true;
+var style_to_object_1 = __importDefault(require("style-to-object"));
+var utilities_1 = require("./utilities");
+function StyleToJS(style, options) {
+    var output = {};
+    if (!style || typeof style !== 'string') {
+        return output;
+    }
+    style_to_object_1["default"](style, function (property, value) {
+        if (property && value) {
+            output[utilities_1.camelCase(property, options)] = value;
+        }
+    });
+    return output;
+}
+exports["default"] = StyleToJS;
+
+},{"style-to-object":"node_modules/style-to-object/index.js","./utilities":"node_modules/style-to-js/cjs/utilities.js"}],"node_modules/html-react-parser/lib/utilities.js":[function(require,module,exports) {
+var React = require('react');
+var styleToJS = require('style-to-js').default;
+
+/**
+ * Swap key with value in an object.
+ *
+ * @param  {Object}   obj        - The object.
+ * @param  {Function} [override] - The override method.
+ * @return {Object}              - The inverted object.
+ */
+function invertObject(obj, override) {
+  if (!obj || typeof obj !== 'object') {
+    throw new TypeError('First argument must be an object');
+  }
+
+  var key;
+  var value;
+  var isOverridePresent = typeof override === 'function';
+  var overrides = {};
+  var result = {};
+
+  for (key in obj) {
+    value = obj[key];
+
+    if (isOverridePresent) {
+      overrides = override(key, value);
+      if (overrides && overrides.length === 2) {
+        result[overrides[0]] = overrides[1];
+        continue;
+      }
+    }
+
+    if (typeof value === 'string') {
+      result[value] = key;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Check if a given tag is a custom component.
+ *
+ * @see {@link https://github.com/facebook/react/blob/v16.6.3/packages/react-dom/src/shared/isCustomComponent.js}
+ *
+ * @param {string} tagName - The name of the html tag.
+ * @param {Object} props   - The props being passed to the element.
+ * @return {boolean}
+ */
+function isCustomComponent(tagName, props) {
+  if (tagName.indexOf('-') === -1) {
+    return props && typeof props.is === 'string';
+  }
+
+  switch (tagName) {
+    // These are reserved SVG and MathML elements.
+    // We don't mind this whitelist too much because we expect it to never grow.
+    // The alternative is to track the namespace in a few places which is convoluted.
+    // https://w3c.github.io/webcomponents/spec/custom/#custom-elements-core-concepts
+    case 'annotation-xml':
+    case 'color-profile':
+    case 'font-face':
+    case 'font-face-src':
+    case 'font-face-uri':
+    case 'font-face-format':
+    case 'font-face-name':
+    case 'missing-glyph':
+      return false;
+    default:
+      return true;
+  }
+}
+
+var styleToJSOptions = { reactCompat: true };
+
+/**
+ * Sets style prop.
+ *
+ * @param {null|undefined|string} style
+ * @param {object} props
+ */
+function setStyleProp(style, props) {
+  if (style === null || style === undefined) {
+    return;
+  }
+  try {
+    props.style = styleToJS(style, styleToJSOptions);
+  } catch (err) {
+    props.style = {};
+  }
+}
+
+/**
+ * @constant {boolean}
+ * @see {@link https://reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html}
+ */
+var PRESERVE_CUSTOM_ATTRIBUTES = React.version.split('.')[0] >= 16;
+
+module.exports = {
+  PRESERVE_CUSTOM_ATTRIBUTES: PRESERVE_CUSTOM_ATTRIBUTES,
+  invertObject: invertObject,
+  isCustomComponent: isCustomComponent,
+  setStyleProp: setStyleProp
+};
+
+},{"react":"node_modules/react/index.js","style-to-js":"node_modules/style-to-js/cjs/index.js"}],"node_modules/html-react-parser/lib/attributes-to-props.js":[function(require,module,exports) {
+var reactProperty = require('react-property');
+var utilities = require('./utilities');
+
+var setStyleProp = utilities.setStyleProp;
+
+var htmlProperties = reactProperty.html;
+var svgProperties = reactProperty.svg;
+var isCustomAttribute = reactProperty.isCustomAttribute;
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * Converts HTML/SVG DOM attributes to React props.
+ *
+ * @param  {object} [attributes={}] - HTML/SVG DOM attributes.
+ * @return {object}                 - React props.
+ */
+function attributesToProps(attributes) {
+  attributes = attributes || {};
+
+  var attributeName;
+  var attributeNameLowerCased;
+  var attributeValue;
+  var property;
+  var props = {};
+
+  for (attributeName in attributes) {
+    attributeValue = attributes[attributeName];
+
+    // ARIA (aria-*) or custom data (data-*) attribute
+    if (isCustomAttribute(attributeName)) {
+      props[attributeName] = attributeValue;
+      continue;
+    }
+
+    // convert HTML attribute to React prop
+    attributeNameLowerCased = attributeName.toLowerCase();
+    if (hasOwnProperty.call(htmlProperties, attributeNameLowerCased)) {
+      property = htmlProperties[attributeNameLowerCased];
+      props[property.propertyName] =
+        property.hasBooleanValue ||
+        (property.hasOverloadedBooleanValue && !attributeValue)
+          ? true
+          : attributeValue;
+      continue;
+    }
+
+    // convert SVG attribute to React prop
+    if (hasOwnProperty.call(svgProperties, attributeName)) {
+      property = svgProperties[attributeName];
+      props[property.propertyName] = attributeValue;
+      continue;
+    }
+
+    // preserve custom attribute if React >=16
+    if (utilities.PRESERVE_CUSTOM_ATTRIBUTES) {
+      props[attributeName] = attributeValue;
+    }
+  }
+
+  // transform inline style to object
+  setStyleProp(attributes.style, props);
+
+  return props;
+}
+
+module.exports = attributesToProps;
+
+},{"react-property":"node_modules/react-property/index.js","./utilities":"node_modules/html-react-parser/lib/utilities.js"}],"node_modules/html-react-parser/lib/dom-to-react.js":[function(require,module,exports) {
+var React = require('react');
+var attributesToProps = require('./attributes-to-props');
+var utilities = require('./utilities');
+
+var setStyleProp = utilities.setStyleProp;
+
+/**
+ * Converts DOM nodes to JSX element(s).
+ *
+ * @param  {DomElement[]} nodes             - DOM nodes.
+ * @param  {object}       [options={}]      - Options.
+ * @param  {Function}     [options.replace] - Replacer.
+ * @param  {object}       [options.library] - Library (React/Preact/etc.).
+ * @return {string|JSX.Element|JSX.Element[]}
+ */
+function domToReact(nodes, options) {
+  options = options || {};
+
+  var library = options.library || React;
+  var cloneElement = library.cloneElement;
+  var createElement = library.createElement;
+  var isValidElement = library.isValidElement;
+
+  var result = [];
+  var node;
+  var hasReplace = typeof options.replace === 'function';
+  var replaceElement;
+  var props;
+  var children;
+  var data;
+  var trim = options.trim;
+
+  for (var i = 0, len = nodes.length; i < len; i++) {
+    node = nodes[i];
+
+    // replace with custom React element (if present)
+    if (hasReplace) {
+      replaceElement = options.replace(node);
+
+      if (isValidElement(replaceElement)) {
+        // set "key" prop for sibling elements
+        // https://fb.me/react-warning-keys
+        if (len > 1) {
+          replaceElement = cloneElement(replaceElement, {
+            key: replaceElement.key || i
+          });
+        }
+        result.push(replaceElement);
+        continue;
+      }
+    }
+
+    if (node.type === 'text') {
+      // if trim option is enabled, skip whitespace text nodes
+      if (trim) {
+        data = node.data.trim();
+        if (data) {
+          result.push(node.data);
+        }
+      } else {
+        result.push(node.data);
+      }
+      continue;
+    }
+
+    props = node.attribs;
+    if (skipAttributesToProps(node)) {
+      setStyleProp(props.style, props);
+    } else if (props) {
+      props = attributesToProps(props);
+    }
+
+    children = null;
+
+    switch (node.type) {
+      case 'script':
+      case 'style':
+        // prevent text in <script> or <style> from being escaped
+        // https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml
+        if (node.children[0]) {
+          props.dangerouslySetInnerHTML = {
+            __html: node.children[0].data
+          };
+        }
+        break;
+
+      case 'tag':
+        // setting textarea value in children is an antipattern in React
+        // https://reactjs.org/docs/forms.html#the-textarea-tag
+        if (node.name === 'textarea' && node.children[0]) {
+          props.defaultValue = node.children[0].data;
+        } else if (node.children && node.children.length) {
+          // continue recursion of creating React elements (if applicable)
+          children = domToReact(node.children, options);
+        }
+        break;
+
+      // skip all other cases (e.g., comment)
+      default:
+        continue;
+    }
+
+    // set "key" prop for sibling elements
+    // https://fb.me/react-warning-keys
+    if (len > 1) {
+      props.key = i;
+    }
+
+    result.push(createElement(node.name, props, children));
+  }
+
+  return result.length === 1 ? result[0] : result;
+}
+
+/**
+ * Determines whether DOM element attributes should be transformed to props.
+ * Web Components should not have their attributes transformed except for `style`.
+ *
+ * @param  {DomElement} node
+ * @return {boolean}
+ */
+function skipAttributesToProps(node) {
+  return (
+    utilities.PRESERVE_CUSTOM_ATTRIBUTES &&
+    node.type === 'tag' &&
+    utilities.isCustomComponent(node.name, node.attribs)
+  );
+}
+
+module.exports = domToReact;
+
+},{"react":"node_modules/react/index.js","./attributes-to-props":"node_modules/html-react-parser/lib/attributes-to-props.js","./utilities":"node_modules/html-react-parser/lib/utilities.js"}],"node_modules/html-dom-parser/lib/client/constants.js":[function(require,module,exports) {
+/**
+ * SVG elements are case-sensitive.
+ *
+ * @see {@link https://developer.mozilla.org/docs/Web/SVG/Element#SVG_elements_A_to_Z}
+ */
+var CASE_SENSITIVE_TAG_NAMES = [
+  'animateMotion',
+  'animateTransform',
+  'clipPath',
+  'feBlend',
+  'feColorMatrix',
+  'feComponentTransfer',
+  'feComposite',
+  'feConvolveMatrix',
+  'feDiffuseLighting',
+  'feDisplacementMap',
+  'feDropShadow',
+  'feFlood',
+  'feFuncA',
+  'feFuncB',
+  'feFuncG',
+  'feFuncR',
+  'feGaussainBlur',
+  'feImage',
+  'feMerge',
+  'feMergeNode',
+  'feMorphology',
+  'feOffset',
+  'fePointLight',
+  'feSpecularLighting',
+  'feSpotLight',
+  'feTile',
+  'feTurbulence',
+  'foreignObject',
+  'linearGradient',
+  'radialGradient',
+  'textPath'
+];
+
+module.exports = {
+  CASE_SENSITIVE_TAG_NAMES: CASE_SENSITIVE_TAG_NAMES
+};
+
+},{}],"node_modules/html-dom-parser/node_modules/domelementtype/lib/index.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Doctype = exports.CDATA = exports.Tag = exports.Style = exports.Script = exports.Comment = exports.Directive = exports.Text = exports.Root = exports.isTag = exports.ElementType = void 0;
+/** Types of elements found in htmlparser2's DOM */
+var ElementType;
+(function (ElementType) {
+    /** Type for the root element of a document */
+    ElementType["Root"] = "root";
+    /** Type for Text */
+    ElementType["Text"] = "text";
+    /** Type for <? ... ?> */
+    ElementType["Directive"] = "directive";
+    /** Type for <!-- ... --> */
+    ElementType["Comment"] = "comment";
+    /** Type for <script> tags */
+    ElementType["Script"] = "script";
+    /** Type for <style> tags */
+    ElementType["Style"] = "style";
+    /** Type for Any tag */
+    ElementType["Tag"] = "tag";
+    /** Type for <![CDATA[ ... ]]> */
+    ElementType["CDATA"] = "cdata";
+    /** Type for <!doctype ...> */
+    ElementType["Doctype"] = "doctype";
+})(ElementType = exports.ElementType || (exports.ElementType = {}));
+/**
+ * Tests whether an element is a tag or not.
+ *
+ * @param elem Element to test
+ */
+function isTag(elem) {
+    return (elem.type === ElementType.Tag ||
+        elem.type === ElementType.Script ||
+        elem.type === ElementType.Style);
+}
+exports.isTag = isTag;
+// Exports for backwards compatibility
+/** Type for the root element of a document */
+exports.Root = ElementType.Root;
+/** Type for Text */
+exports.Text = ElementType.Text;
+/** Type for <? ... ?> */
+exports.Directive = ElementType.Directive;
+/** Type for <!-- ... --> */
+exports.Comment = ElementType.Comment;
+/** Type for <script> tags */
+exports.Script = ElementType.Script;
+/** Type for <style> tags */
+exports.Style = ElementType.Style;
+/** Type for Any tag */
+exports.Tag = ElementType.Tag;
+/** Type for <![CDATA[ ... ]]> */
+exports.CDATA = ElementType.CDATA;
+/** Type for <!doctype ...> */
+exports.Doctype = ElementType.Doctype;
+
+},{}],"node_modules/html-dom-parser/node_modules/domhandler/lib/node.js":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var extendStatics = function (d, b) {
+    extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+    };
+
+    return extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cloneNode = exports.hasChildren = exports.isDocument = exports.isDirective = exports.isComment = exports.isText = exports.isCDATA = exports.isTag = exports.Element = exports.Document = exports.NodeWithChildren = exports.ProcessingInstruction = exports.Comment = exports.Text = exports.DataNode = exports.Node = void 0;
+
+var domelementtype_1 = require("domelementtype");
+
+var nodeTypes = new Map([[domelementtype_1.ElementType.Tag, 1], [domelementtype_1.ElementType.Script, 1], [domelementtype_1.ElementType.Style, 1], [domelementtype_1.ElementType.Directive, 1], [domelementtype_1.ElementType.Text, 3], [domelementtype_1.ElementType.CDATA, 4], [domelementtype_1.ElementType.Comment, 8], [domelementtype_1.ElementType.Root, 9]]);
+/**
+ * This object will be used as the prototype for Nodes when creating a
+ * DOM-Level-1-compliant structure.
+ */
+
+var Node = function () {
+  /**
+   *
+   * @param type The type of the node.
+   */
+  function Node(type) {
+    this.type = type;
+    /** Parent of the node */
+
+    this.parent = null;
+    /** Previous sibling */
+
+    this.prev = null;
+    /** Next sibling */
+
+    this.next = null;
+    /** The start index of the node. Requires `withStartIndices` on the handler to be `true. */
+
+    this.startIndex = null;
+    /** The end index of the node. Requires `withEndIndices` on the handler to be `true. */
+
+    this.endIndex = null;
+  }
+
+  Object.defineProperty(Node.prototype, "nodeType", {
+    // Read-only aliases
+    get: function () {
+      var _a;
+
+      return (_a = nodeTypes.get(this.type)) !== null && _a !== void 0 ? _a : 1;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Node.prototype, "parentNode", {
+    // Read-write aliases for properties
+    get: function () {
+      return this.parent;
+    },
+    set: function (parent) {
+      this.parent = parent;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Node.prototype, "previousSibling", {
+    get: function () {
+      return this.prev;
+    },
+    set: function (prev) {
+      this.prev = prev;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Node.prototype, "nextSibling", {
+    get: function () {
+      return this.next;
+    },
+    set: function (next) {
+      this.next = next;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  /**
+   * Clone this node, and optionally its children.
+   *
+   * @param recursive Clone child nodes as well.
+   * @returns A clone of the node.
+   */
+
+  Node.prototype.cloneNode = function (recursive) {
+    if (recursive === void 0) {
+      recursive = false;
+    }
+
+    return cloneNode(this, recursive);
+  };
+
+  return Node;
+}();
+
+exports.Node = Node;
+
+var DataNode = function (_super) {
+  __extends(DataNode, _super);
+  /**
+   * @param type The type of the node
+   * @param data The content of the data node
+   */
+
+
+  function DataNode(type, data) {
+    var _this = _super.call(this, type) || this;
+
+    _this.data = data;
+    return _this;
+  }
+
+  Object.defineProperty(DataNode.prototype, "nodeValue", {
+    get: function () {
+      return this.data;
+    },
+    set: function (data) {
+      this.data = data;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  return DataNode;
+}(Node);
+
+exports.DataNode = DataNode;
+
+var Text = function (_super) {
+  __extends(Text, _super);
+
+  function Text(data) {
+    return _super.call(this, domelementtype_1.ElementType.Text, data) || this;
+  }
+
+  return Text;
+}(DataNode);
+
+exports.Text = Text;
+
+var Comment = function (_super) {
+  __extends(Comment, _super);
+
+  function Comment(data) {
+    return _super.call(this, domelementtype_1.ElementType.Comment, data) || this;
+  }
+
+  return Comment;
+}(DataNode);
+
+exports.Comment = Comment;
+
+var ProcessingInstruction = function (_super) {
+  __extends(ProcessingInstruction, _super);
+
+  function ProcessingInstruction(name, data) {
+    var _this = _super.call(this, domelementtype_1.ElementType.Directive, data) || this;
+
+    _this.name = name;
+    return _this;
+  }
+
+  return ProcessingInstruction;
+}(DataNode);
+
+exports.ProcessingInstruction = ProcessingInstruction;
+/**
+ * A `Node` that can have children.
+ */
+
+var NodeWithChildren = function (_super) {
+  __extends(NodeWithChildren, _super);
+  /**
+   * @param type Type of the node.
+   * @param children Children of the node. Only certain node types can have children.
+   */
+
+
+  function NodeWithChildren(type, children) {
+    var _this = _super.call(this, type) || this;
+
+    _this.children = children;
+    return _this;
+  }
+
+  Object.defineProperty(NodeWithChildren.prototype, "firstChild", {
+    // Aliases
+    get: function () {
+      var _a;
+
+      return (_a = this.children[0]) !== null && _a !== void 0 ? _a : null;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(NodeWithChildren.prototype, "lastChild", {
+    get: function () {
+      return this.children.length > 0 ? this.children[this.children.length - 1] : null;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(NodeWithChildren.prototype, "childNodes", {
+    get: function () {
+      return this.children;
+    },
+    set: function (children) {
+      this.children = children;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  return NodeWithChildren;
+}(Node);
+
+exports.NodeWithChildren = NodeWithChildren;
+
+var Document = function (_super) {
+  __extends(Document, _super);
+
+  function Document(children) {
+    return _super.call(this, domelementtype_1.ElementType.Root, children) || this;
+  }
+
+  return Document;
+}(NodeWithChildren);
+
+exports.Document = Document;
+
+var Element = function (_super) {
+  __extends(Element, _super);
+  /**
+   * @param name Name of the tag, eg. `div`, `span`.
+   * @param attribs Object mapping attribute names to attribute values.
+   * @param children Children of the node.
+   */
+
+
+  function Element(name, attribs, children, type) {
+    if (children === void 0) {
+      children = [];
+    }
+
+    if (type === void 0) {
+      type = name === "script" ? domelementtype_1.ElementType.Script : name === "style" ? domelementtype_1.ElementType.Style : domelementtype_1.ElementType.Tag;
+    }
+
+    var _this = _super.call(this, type, children) || this;
+
+    _this.name = name;
+    _this.attribs = attribs;
+    return _this;
+  }
+
+  Object.defineProperty(Element.prototype, "tagName", {
+    // DOM Level 1 aliases
+    get: function () {
+      return this.name;
+    },
+    set: function (name) {
+      this.name = name;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Element.prototype, "attributes", {
+    get: function () {
+      var _this = this;
+
+      return Object.keys(this.attribs).map(function (name) {
+        var _a, _b;
+
+        return {
+          name: name,
+          value: _this.attribs[name],
+          namespace: (_a = _this["x-attribsNamespace"]) === null || _a === void 0 ? void 0 : _a[name],
+          prefix: (_b = _this["x-attribsPrefix"]) === null || _b === void 0 ? void 0 : _b[name]
+        };
+      });
+    },
+    enumerable: false,
+    configurable: true
+  });
+  return Element;
+}(NodeWithChildren);
+
+exports.Element = Element;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node is a `Element`, `false` otherwise.
+ */
+
+function isTag(node) {
+  return domelementtype_1.isTag(node);
+}
+
+exports.isTag = isTag;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `CDATA`, `false` otherwise.
+ */
+
+function isCDATA(node) {
+  return node.type === domelementtype_1.ElementType.CDATA;
+}
+
+exports.isCDATA = isCDATA;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `Text`, `false` otherwise.
+ */
+
+function isText(node) {
+  return node.type === domelementtype_1.ElementType.Text;
+}
+
+exports.isText = isText;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `Comment`, `false` otherwise.
+ */
+
+function isComment(node) {
+  return node.type === domelementtype_1.ElementType.Comment;
+}
+
+exports.isComment = isComment;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ */
+
+function isDirective(node) {
+  return node.type === domelementtype_1.ElementType.Directive;
+}
+
+exports.isDirective = isDirective;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ */
+
+function isDocument(node) {
+  return node.type === domelementtype_1.ElementType.Root;
+}
+
+exports.isDocument = isDocument;
+/**
+ * @param node Node to check.
+ * @returns `true` if the node is a `NodeWithChildren` (has children), `false` otherwise.
+ */
+
+function hasChildren(node) {
+  return Object.prototype.hasOwnProperty.call(node, "children");
+}
+
+exports.hasChildren = hasChildren;
+/**
+ * Clone a node, and optionally its children.
+ *
+ * @param recursive Clone child nodes as well.
+ * @returns A clone of the node.
+ */
+
+function cloneNode(node, recursive) {
+  if (recursive === void 0) {
+    recursive = false;
+  }
+
+  var result;
+
+  if (isText(node)) {
+    result = new Text(node.data);
+  } else if (isComment(node)) {
+    result = new Comment(node.data);
+  } else if (isTag(node)) {
+    var children = recursive ? cloneChildren(node.children) : [];
+    var clone_1 = new Element(node.name, __assign({}, node.attribs), children);
+    children.forEach(function (child) {
+      return child.parent = clone_1;
+    });
+
+    if (node["x-attribsNamespace"]) {
+      clone_1["x-attribsNamespace"] = __assign({}, node["x-attribsNamespace"]);
+    }
+
+    if (node["x-attribsPrefix"]) {
+      clone_1["x-attribsPrefix"] = __assign({}, node["x-attribsPrefix"]);
+    }
+
+    result = clone_1;
+  } else if (isCDATA(node)) {
+    var children = recursive ? cloneChildren(node.children) : [];
+    var clone_2 = new NodeWithChildren(domelementtype_1.ElementType.CDATA, children);
+    children.forEach(function (child) {
+      return child.parent = clone_2;
+    });
+    result = clone_2;
+  } else if (isDocument(node)) {
+    var children = recursive ? cloneChildren(node.children) : [];
+    var clone_3 = new Document(children);
+    children.forEach(function (child) {
+      return child.parent = clone_3;
+    });
+
+    if (node["x-mode"]) {
+      clone_3["x-mode"] = node["x-mode"];
+    }
+
+    result = clone_3;
+  } else if (isDirective(node)) {
+    var instruction = new ProcessingInstruction(node.name, node.data);
+
+    if (node["x-name"] != null) {
+      instruction["x-name"] = node["x-name"];
+      instruction["x-publicId"] = node["x-publicId"];
+      instruction["x-systemId"] = node["x-systemId"];
+    }
+
+    result = instruction;
+  } else {
+    throw new Error("Not implemented yet: " + node.type);
+  }
+
+  result.startIndex = node.startIndex;
+  result.endIndex = node.endIndex;
+  return result;
+}
+
+exports.cloneNode = cloneNode;
+
+function cloneChildren(childs) {
+  var children = childs.map(function (child) {
+    return cloneNode(child, true);
+  });
+
+  for (var i = 1; i < children.length; i++) {
+    children[i].prev = children[i - 1];
+    children[i - 1].next = children[i];
+  }
+
+  return children;
+}
+},{"domelementtype":"node_modules/html-dom-parser/node_modules/domelementtype/lib/index.js"}],"node_modules/html-dom-parser/lib/client/utilities.js":[function(require,module,exports) {
+var constants = require('./constants');
+var domhandler = require('domhandler/lib/node');
+
+var CASE_SENSITIVE_TAG_NAMES = constants.CASE_SENSITIVE_TAG_NAMES;
+
+var Comment = domhandler.Comment;
+var Element = domhandler.Element;
+var ProcessingInstruction = domhandler.ProcessingInstruction;
+var Text = domhandler.Text;
+
+var caseSensitiveTagNamesMap = {};
+var tagName;
+
+for (var i = 0, len = CASE_SENSITIVE_TAG_NAMES.length; i < len; i++) {
+  tagName = CASE_SENSITIVE_TAG_NAMES[i];
+  caseSensitiveTagNamesMap[tagName.toLowerCase()] = tagName;
+}
+
+/**
+ * Gets case-sensitive tag name.
+ *
+ * @param  {string}           tagName - Tag name in lowercase.
+ * @return {string|undefined}         - Case-sensitive tag name.
+ */
+function getCaseSensitiveTagName(tagName) {
+  return caseSensitiveTagNamesMap[tagName];
+}
+
+/**
+ * Formats DOM attributes to a hash map.
+ *
+ * @param  {NamedNodeMap} attributes - List of attributes.
+ * @return {object}                  - Map of attribute name to value.
+ */
+function formatAttributes(attributes) {
+  var result = {};
+  var attribute;
+  // `NamedNodeMap` is array-like
+  for (var i = 0, len = attributes.length; i < len; i++) {
+    attribute = attributes[i];
+    result[attribute.name] = attribute.value;
+  }
+  return result;
+}
+
+/**
+ * Corrects the tag name if it is case-sensitive (SVG).
+ * Otherwise, returns the lowercase tag name (HTML).
+ *
+ * @param  {string} tagName - Lowercase tag name.
+ * @return {string}         - Formatted tag name.
+ */
+function formatTagName(tagName) {
+  tagName = tagName.toLowerCase();
+  var caseSensitiveTagName = getCaseSensitiveTagName(tagName);
+  if (caseSensitiveTagName) {
+    return caseSensitiveTagName;
+  }
+  return tagName;
+}
+
+/**
+ * Transforms DOM nodes to `domhandler` nodes.
+ *
+ * @param  {NodeList}     nodes         - DOM nodes.
+ * @param  {Element|null} [parent=null] - Parent node.
+ * @param  {string}       [directive]   - Directive.
+ * @return {Array<Comment|Element|ProcessingInstruction|Text>}
+ */
+function formatDOM(nodes, parent, directive) {
+  parent = parent || null;
+  var result = [];
+
+  for (var index = 0, len = nodes.length; index < len; index++) {
+    var node = nodes[index];
+    var current;
+
+    // set the node data given the type
+    switch (node.nodeType) {
+      case 1:
+        // script, style, or tag
+        current = new Element(
+          formatTagName(node.nodeName),
+          formatAttributes(node.attributes)
+        );
+        current.children = formatDOM(node.childNodes, current);
+        break;
+
+      case 3:
+        current = new Text(node.nodeValue);
+        break;
+
+      case 8:
+        current = new Comment(node.nodeValue);
+        break;
+
+      default:
+        continue;
+    }
+
+    // set previous node next
+    var prev = result[index - 1] || null;
+    if (prev) {
+      prev.next = current;
+    }
+
+    // set properties for current node
+    current.parent = parent;
+    current.prev = prev;
+    current.next = null;
+
+    result.push(current);
+  }
+
+  if (directive) {
+    current = new ProcessingInstruction(
+      directive.substring(0, directive.indexOf(' ')).toLowerCase(),
+      directive
+    );
+    current.next = result[0] || null;
+    current.parent = parent;
+    result.unshift(current);
+
+    if (result[1]) {
+      result[1].prev = result[0];
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Detects if browser is Internet Explorer.
+ *
+ * @return {boolean} - Whether IE is detected.
+ */
+function isIE() {
+  return /(MSIE |Trident\/|Edge\/)/.test(navigator.userAgent);
+}
+
+module.exports = {
+  formatAttributes: formatAttributes,
+  formatDOM: formatDOM,
+  isIE: isIE
+};
+
+},{"./constants":"node_modules/html-dom-parser/lib/client/constants.js","domhandler/lib/node":"node_modules/html-dom-parser/node_modules/domhandler/lib/node.js"}],"node_modules/html-dom-parser/lib/client/domparser.js":[function(require,module,exports) {
+// constants
+var HTML = 'html';
+var HEAD = 'head';
+var BODY = 'body';
+var FIRST_TAG_REGEX = /<([a-zA-Z]+[0-9]?)/; // e.g., <h1>
+var HEAD_TAG_REGEX = /<head.*>/i;
+var BODY_TAG_REGEX = /<body.*>/i;
+
+// falls back to `parseFromString` if `createHTMLDocument` cannot be used
+var parseFromDocument = function () {
+  throw new Error(
+    'This browser does not support `document.implementation.createHTMLDocument`'
+  );
+};
+
+var parseFromString = function () {
+  throw new Error(
+    'This browser does not support `DOMParser.prototype.parseFromString`'
+  );
+};
+
+/**
+ * DOMParser (performance: slow).
+ *
+ * @see https://developer.mozilla.org/docs/Web/API/DOMParser#Parsing_an_SVG_or_HTML_document
+ */
+if (typeof window.DOMParser === 'function') {
+  var domParser = new window.DOMParser();
+  var mimeType = 'text/html';
+
+  /**
+   * Creates an HTML document using `DOMParser.parseFromString`.
+   *
+   * @param  {string} html      - The HTML string.
+   * @param  {string} [tagName] - The element to render the HTML (with 'body' as fallback).
+   * @return {HTMLDocument}
+   */
+  parseFromString = function (html, tagName) {
+    if (tagName) {
+      html = '<' + tagName + '>' + html + '</' + tagName + '>';
+    }
+
+    return domParser.parseFromString(html, mimeType);
+  };
+
+  parseFromDocument = parseFromString;
+}
+
+/**
+ * DOMImplementation (performance: fair).
+ *
+ * @see https://developer.mozilla.org/docs/Web/API/DOMImplementation/createHTMLDocument
+ */
+if (document.implementation) {
+  var isIE = require('./utilities').isIE;
+
+  // title parameter is required in IE
+  // https://msdn.microsoft.com/en-us/library/ff975457(v=vs.85).aspx
+  var doc = document.implementation.createHTMLDocument(
+    isIE() ? 'html-dom-parser' : undefined
+  );
+
+  /**
+   * Use HTML document created by `document.implementation.createHTMLDocument`.
+   *
+   * @param  {string} html      - The HTML string.
+   * @param  {string} [tagName] - The element to render the HTML (with 'body' as fallback).
+   * @return {HTMLDocument}
+   */
+  parseFromDocument = function (html, tagName) {
+    if (tagName) {
+      doc.documentElement.getElementsByTagName(tagName)[0].innerHTML = html;
+      return doc;
+    }
+
+    doc.documentElement.innerHTML = html;
+    return doc;
+  };
+}
+
+/**
+ * Template (performance: fast).
+ *
+ * @see https://developer.mozilla.org/docs/Web/HTML/Element/template
+ */
+var template = document.createElement('template');
+var parseFromTemplate;
+
+if (template.content) {
+  /**
+   * Uses a template element (content fragment) to parse HTML.
+   *
+   * @param  {string} html - The HTML string.
+   * @return {NodeList}
+   */
+  parseFromTemplate = function (html) {
+    template.innerHTML = html;
+    return template.content.childNodes;
+  };
+}
+
+/**
+ * Parses HTML string to DOM nodes.
+ *
+ * @param  {string}   html - HTML markup.
+ * @return {NodeList}
+ */
+function domparser(html) {
+  var firstTagName;
+  var match = html.match(FIRST_TAG_REGEX);
+
+  if (match && match[1]) {
+    firstTagName = match[1].toLowerCase();
+  }
+
+  var doc;
+  var element;
+  var elements;
+
+  switch (firstTagName) {
+    case HTML:
+      doc = parseFromString(html);
+
+      // the created document may come with filler head/body elements,
+      // so make sure to remove them if they don't actually exist
+      if (!HEAD_TAG_REGEX.test(html)) {
+        element = doc.getElementsByTagName(HEAD)[0];
+        if (element) {
+          element.parentNode.removeChild(element);
+        }
+      }
+
+      if (!BODY_TAG_REGEX.test(html)) {
+        element = doc.getElementsByTagName(BODY)[0];
+        if (element) {
+          element.parentNode.removeChild(element);
+        }
+      }
+
+      return doc.getElementsByTagName(HTML);
+
+    case HEAD:
+    case BODY:
+      elements = parseFromDocument(html).getElementsByTagName(firstTagName);
+
+      // if there's a sibling element, then return both elements
+      if (BODY_TAG_REGEX.test(html) && HEAD_TAG_REGEX.test(html)) {
+        return elements[0].parentNode.childNodes;
+      }
+      return elements;
+
+    // low-level tag or text
+    default:
+      if (parseFromTemplate) {
+        return parseFromTemplate(html);
+      }
+
+      return parseFromDocument(html, BODY).getElementsByTagName(BODY)[0]
+        .childNodes;
+  }
+}
+
+module.exports = domparser;
+
+},{"./utilities":"node_modules/html-dom-parser/lib/client/utilities.js"}],"node_modules/html-dom-parser/lib/client/html-to-dom.js":[function(require,module,exports) {
+var domparser = require('./domparser');
+var formatDOM = require('./utilities').formatDOM;
+
+var DIRECTIVE_REGEX = /<(![a-zA-Z\s]+)>/; // e.g., <!doctype html>
+
+/**
+ * Parses HTML string to DOM nodes in browser.
+ *
+ * @param  {string} html  - HTML markup.
+ * @return {DomElement[]} - DOM elements.
+ */
+function HTMLDOMParser(html) {
+  if (typeof html !== 'string') {
+    throw new TypeError('First argument must be a string');
+  }
+
+  if (html === '') {
+    return [];
+  }
+
+  // match directive
+  var match = html.match(DIRECTIVE_REGEX);
+  var directive;
+
+  if (match && match[1]) {
+    directive = match[1];
+  }
+
+  return formatDOM(domparser(html), null, directive);
+}
+
+module.exports = HTMLDOMParser;
+
+},{"./domparser":"node_modules/html-dom-parser/lib/client/domparser.js","./utilities":"node_modules/html-dom-parser/lib/client/utilities.js"}],"node_modules/html-react-parser/index.js":[function(require,module,exports) {
+var domToReact = require('./lib/dom-to-react');
+var attributesToProps = require('./lib/attributes-to-props');
+var htmlToDOM = require('html-dom-parser');
+
+var domParserOptions = { lowerCaseAttributeNames: false };
+
+/**
+ * Converts HTML string to React elements.
+ *
+ * @param  {String}   html                    - HTML string.
+ * @param  {Object}   [options]               - Parser options.
+ * @param  {Object}   [options.htmlparser2]   - htmlparser2 options.
+ * @param  {Object}   [options.library]       - Library for React, Preact, etc.
+ * @param  {Function} [options.replace]       - Replace method.
+ * @return {JSX.Element|JSX.Element[]|String} - React element(s), empty array, or string.
+ */
+function HTMLReactParser(html, options) {
+  if (typeof html !== 'string') {
+    throw new TypeError('First argument must be a string');
+  }
+  if (html === '') {
+    return [];
+  }
+  options = options || {};
+  return domToReact(
+    htmlToDOM(html, options.htmlparser2 || domParserOptions),
+    options
+  );
+}
+
+HTMLReactParser.domToReact = domToReact;
+HTMLReactParser.htmlToDOM = htmlToDOM;
+HTMLReactParser.attributesToProps = attributesToProps;
+
+// support CommonJS and ES Modules
+module.exports = HTMLReactParser;
+module.exports.default = HTMLReactParser;
+
+},{"./lib/dom-to-react":"node_modules/html-react-parser/lib/dom-to-react.js","./lib/attributes-to-props":"node_modules/html-react-parser/lib/attributes-to-props.js","html-dom-parser":"node_modules/html-dom-parser/lib/client/html-to-dom.js"}],"node_modules/html-react-parser/index.mjs":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.attributesToProps = exports.htmlToDOM = exports.domToReact = void 0;
+
+var _index = _interopRequireDefault(require("./index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var domToReact = _index.default.domToReact;
+exports.domToReact = domToReact;
+var htmlToDOM = _index.default.htmlToDOM;
+exports.htmlToDOM = htmlToDOM;
+var attributesToProps = _index.default.attributesToProps;
+exports.attributesToProps = attributesToProps;
+var _default = _index.default;
+exports.default = _default;
+},{"./index.js":"node_modules/html-react-parser/index.js"}],"src/utils/Speech.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.speak = void 0;
+var allVoices = speechSynthesis.getVoices();
+var utterance = new SpeechSynthesisUtterance();
+var allVoicesObtained = new Promise(function (resolve, reject) {
+  allVoices = speechSynthesis.getVoices();
+
+  if (allVoices.length !== 0) {
+    resolve(allVoices.filter(function (v) {
+      return v.lang === 'en-US';
+    }));
+  } else {
+    speechSynthesis.addEventListener('voiceschanged', function () {
+      allVoices = speechSynthesis.getVoices();
+      resolve(allVoices.filter(function (v) {
+        return v.lang === 'en-US';
+      }));
+    });
+  }
+});
+
+var speak = function speak(text, handleBoundary, handleEnd) {
+  allVoicesObtained.then(function (voices) {
+    utterance.text = text;
+    utterance.voice = voices[3];
+    utterance.addEventListener('boundary', handleBoundary);
+    utterance.addEventListener('end', handleEnd);
+    speechSynthesis.speak(utterance);
+  });
+};
+
+exports.speak = speak;
+},{}],"src/components/SpeechBox/SpeechBox.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/SpeechBox/SpeechBox.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SpeechBox = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _htmlReactParser = _interopRequireDefault(require("html-react-parser"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _Speech = require("../../utils/Speech");
+
+require("./SpeechBox.scss");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SpeechBox = function SpeechBox(props) {
+  // this code is modified from https://codersblock.com/blog/javascript-text-to-speech-and-its-many-quirks/
+  var _useState = (0, _react.useState)(props.script[0]),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      markedText = _useState2[0],
+      setMarkedText = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(props.script[0]),
+      _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+      currentText = _useState4[0],
+      setCurrentText = _useState4[1];
+
+  var i = 0;
+
+  var incrementText = function incrementText() {
+    if (i < props.script.length - 1) {
+      i++;
+      setCurrentText(props.script[i]);
+    }
+  };
+
+  var handleBoundary = function handleBoundary(event) {
+    if (event.target === 'sentence') {
+      // we only care about word boundaries
+      return;
+    }
+
+    var wordStart = event.charIndex;
+    var wordLength = event.charLength;
+
+    if (wordLength === undefined) {
+      // Safari doesn't provide charLength, so fall back to a regex to find the current word and its length (probably misses some edge cases, but good enough for this demo)
+      var match = currentText.substring(wordStart).match(/^[a-z\d']*/i);
+      if (match === null || match.length === 0) return;
+      wordLength = match[0].length;
+    } // wrap word in <mark> tag
+
+
+    var wordEnd = wordStart + wordLength;
+    var word = currentText.substring(wordStart, wordEnd);
+    setMarkedText(currentText.substring(0, wordStart) + '<mark>' + word + '</mark>' + currentText.substring(wordEnd));
+  }; // speak the text
+
+
+  (0, _react.useEffect)(function () {
+    (0, _Speech.speak)(currentText, handleBoundary, function () {
+      setMarkedText(currentText);
+      incrementText();
+    });
+  }, [currentText]); // update the current text if the script changes
+
+  (0, _react.useEffect)(function () {
+    setCurrentText(props.script[0]);
+  }, [props.script]);
+  return /*#__PURE__*/_react.default.createElement(SpeechText, {
+    text: markedText
+  });
+};
+
+exports.SpeechBox = SpeechBox;
+
+var SpeechText = function SpeechText(props) {
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: 'speech'
+  }, (0, _htmlReactParser.default)(props.text));
+};
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Textbox/Textbox.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Textbox/Textbox.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Textbox = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./Textbox.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Textbox = function Textbox(props) {
+  return /*#__PURE__*/_react.default.createElement("input", {
+    className: 'textbox',
+    type: 'text',
+    name: props.name,
+    value: props.value,
+    onChange: props.onChange,
+    autoFocus: props.autofocus
+  });
+};
+
+exports.Textbox = Textbox;
+},{"react":"node_modules/react/index.js","./Textbox.scss":"src/components/Textbox/Textbox.scss"}],"src/components/Login/Login.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Login/Login.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Login = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _recoil = require("recoil");
+
+var _atoms = require("../../atoms");
+
+var _Button = require("../Button/Button");
+
+var _SpeechBox = require("../SpeechBox/SpeechBox");
+
+var _Textbox = require("../Textbox/Textbox");
+
+require("./Login.scss");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Login = function Login() {
+  var setRecoilName = (0, _recoil.useSetRecoilState)(_atoms.nameState);
+
+  var _useState = (0, _react.useState)(''),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      name = _useState2[0],
+      setName = _useState2[1];
+
+  var _useRecoilState = (0, _recoil.useRecoilState)(_atoms.gameStateAtom),
+      _useRecoilState2 = (0, _slicedToArray2.default)(_useRecoilState, 2),
+      gameState = _useRecoilState2[0],
+      setGameState = _useRecoilState2[1];
+
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: 'startup'
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: 'title'
+  }, "Typing", /*#__PURE__*/_react.default.createElement("br", null), "Tuesdays"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
+    script: ['Hello! Please type your name']
+  }), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement(_Textbox.Textbox, {
+    name: 'name',
+    onChange: function onChange(e) {
+      return setName(e.target.value);
+    },
+    value: name,
+    autofocus: true
+  }), /*#__PURE__*/_react.default.createElement(_Button.Button, {
+    type: 'submit',
+    onClick: function onClick(e) {
+      e.preventDefault();
+      setRecoilName(name);
+      setGameState('menu');
+    }
+  }, "Start!")));
+};
+
+exports.Login = Login;
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","../Textbox/Textbox":"src/components/Textbox/Textbox.tsx","./Login.scss":"src/components/Login/Login.scss"}],"src/components/Menu/Menu.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Menu/Menu.tsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Menu = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _recoil = require("recoil");
+
+var _atoms = require("../../atoms");
+
+var _Button = require("../Button/Button");
+
+var _SpeechBox = require("../SpeechBox/SpeechBox");
+
+require("./Menu.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Menu = function Menu() {
+  var setGameState = (0, _recoil.useSetRecoilState)(_atoms.gameStateAtom);
+  var name = (0, _recoil.useRecoilValue)(_atoms.nameState);
+  return /*#__PURE__*/_react.default.createElement("div", {
+    id: 'menu'
+  }, /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
+    script: ["Hello ".concat(name, ". Which game would you like to play?")]
+  }), /*#__PURE__*/_react.default.createElement(_Button.Button, {
+    onClick: function onClick() {
+      return setGameState('shapes');
+    }
+  }, "Shapes"), /*#__PURE__*/_react.default.createElement(_Button.Button, {
+    onClick: function onClick() {
+      return setGameState('shapes');
+    }
+  }, "Letters"), /*#__PURE__*/_react.default.createElement(_Button.Button, {
+    onClick: function onClick() {
+      return setGameState('shapes');
+    }
+  }, "Animals"));
+};
+
+exports.Menu = Menu;
+},{"react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Menu.scss":"src/components/Menu/Menu.scss"}],"node_modules/konva/lib/Global.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -69697,2492 +72356,22 @@ Object.keys(_ReactKonvaCore).forEach(function (key) {
     }
   });
 });
-},{"konva":"node_modules/konva/lib/index.js","./ReactKonvaCore":"node_modules/react-konva/es/ReactKonvaCore.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/Button/Button.scss":[function(require,module,exports) {
+},{"konva":"node_modules/konva/lib/index.js","./ReactKonvaCore":"node_modules/react-konva/es/ReactKonvaCore.js"}],"src/components/Shapes/Shapes.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Button/Button.tsx":[function(require,module,exports) {
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Shapes/Shapes.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Button = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-require("./Button.scss");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Button = function Button(props) {
-  return /*#__PURE__*/_react.default.createElement("button", {
-    className: 'button',
-    type: props.type,
-    onClick: props.onClick
-  }, props.children);
-};
-
-exports.Button = Button;
-},{"react":"node_modules/react/index.js","./Button.scss":"src/components/Button/Button.scss"}],"node_modules/react-property/lib/HTMLDOMPropertyConfig.js":[function(require,module,exports) {
-module.exports = {
-  Properties: {
-    autoFocus: 4,
-    accept: 0,
-    acceptCharset: 0,
-    accessKey: 0,
-    action: 0,
-    allowFullScreen: 4,
-    allowTransparency: 0,
-    alt: 0,
-    as: 0,
-    async: 4,
-    autoComplete: 0,
-    autoPlay: 4,
-    capture: 4,
-    cellPadding: 0,
-    cellSpacing: 0,
-    charSet: 0,
-    challenge: 0,
-    checked: 5,
-    cite: 0,
-    classID: 0,
-    className: 0,
-    cols: 24,
-    colSpan: 0,
-    content: 0,
-    contentEditable: 0,
-    contextMenu: 0,
-    controls: 4,
-    controlsList: 0,
-    coords: 0,
-    crossOrigin: 0,
-    data: 0,
-    dateTime: 0,
-    default: 4,
-    defer: 4,
-    dir: 0,
-    disabled: 4,
-    download: 32,
-    draggable: 0,
-    encType: 0,
-    form: 0,
-    formAction: 0,
-    formEncType: 0,
-    formMethod: 0,
-    formNoValidate: 4,
-    formTarget: 0,
-    frameBorder: 0,
-    headers: 0,
-    height: 0,
-    hidden: 4,
-    high: 0,
-    href: 0,
-    hrefLang: 0,
-    htmlFor: 0,
-    httpEquiv: 0,
-    icon: 0,
-    id: 0,
-    inputMode: 0,
-    integrity: 0,
-    is: 0,
-    keyParams: 0,
-    keyType: 0,
-    kind: 0,
-    label: 0,
-    lang: 0,
-    list: 0,
-    loop: 4,
-    low: 0,
-    manifest: 0,
-    marginHeight: 0,
-    marginWidth: 0,
-    max: 0,
-    maxLength: 0,
-    media: 0,
-    mediaGroup: 0,
-    method: 0,
-    min: 0,
-    minLength: 0,
-    multiple: 5,
-    muted: 5,
-    name: 0,
-    nonce: 0,
-    noValidate: 4,
-    open: 4,
-    optimum: 0,
-    pattern: 0,
-    placeholder: 0,
-    playsInline: 4,
-    poster: 0,
-    preload: 0,
-    profile: 0,
-    radioGroup: 0,
-    readOnly: 4,
-    referrerPolicy: 0,
-    rel: 0,
-    required: 4,
-    reversed: 4,
-    role: 0,
-    rows: 24,
-    rowSpan: 8,
-    sandbox: 0,
-    scope: 0,
-    scoped: 4,
-    scrolling: 0,
-    seamless: 4,
-    selected: 5,
-    shape: 0,
-    size: 24,
-    sizes: 0,
-    span: 24,
-    spellCheck: 0,
-    src: 0,
-    srcDoc: 0,
-    srcLang: 0,
-    srcSet: 0,
-    start: 8,
-    step: 0,
-    style: 0,
-    summary: 0,
-    tabIndex: 0,
-    target: 0,
-    title: 0,
-    type: 0,
-    useMap: 0,
-    value: 0,
-    width: 0,
-    wmode: 0,
-    wrap: 0,
-    about: 0,
-    datatype: 0,
-    inlist: 0,
-    prefix: 0,
-    property: 0,
-    resource: 0,
-    typeof: 0,
-    vocab: 0,
-    autoCapitalize: 0,
-    autoCorrect: 0,
-    autoSave: 0,
-    color: 0,
-    itemProp: 0,
-    itemScope: 4,
-    itemType: 0,
-    itemID: 0,
-    itemRef: 0,
-    results: 0,
-    security: 0,
-    unselectable: 0
-  },
-  DOMAttributeNames: {
-    acceptCharset: 'accept-charset',
-    className: 'class',
-    htmlFor: 'for',
-    httpEquiv: 'http-equiv'
-  }
-};
-
-},{}],"node_modules/react-property/lib/SVGDOMPropertyConfig.js":[function(require,module,exports) {
-module.exports = {
-  Properties: {
-    accentHeight: 0,
-    accumulate: 0,
-    additive: 0,
-    alignmentBaseline: 0,
-    allowReorder: 0,
-    alphabetic: 0,
-    amplitude: 0,
-    arabicForm: 0,
-    ascent: 0,
-    attributeName: 0,
-    attributeType: 0,
-    autoReverse: 0,
-    azimuth: 0,
-    baseFrequency: 0,
-    baseProfile: 0,
-    baselineShift: 0,
-    bbox: 0,
-    begin: 0,
-    bias: 0,
-    by: 0,
-    calcMode: 0,
-    capHeight: 0,
-    clip: 0,
-    clipPath: 0,
-    clipRule: 0,
-    clipPathUnits: 0,
-    colorInterpolation: 0,
-    colorInterpolationFilters: 0,
-    colorProfile: 0,
-    colorRendering: 0,
-    contentScriptType: 0,
-    contentStyleType: 0,
-    cursor: 0,
-    cx: 0,
-    cy: 0,
-    d: 0,
-    decelerate: 0,
-    descent: 0,
-    diffuseConstant: 0,
-    direction: 0,
-    display: 0,
-    divisor: 0,
-    dominantBaseline: 0,
-    dur: 0,
-    dx: 0,
-    dy: 0,
-    edgeMode: 0,
-    elevation: 0,
-    enableBackground: 0,
-    end: 0,
-    exponent: 0,
-    externalResourcesRequired: 0,
-    fill: 0,
-    fillOpacity: 0,
-    fillRule: 0,
-    filter: 0,
-    filterRes: 0,
-    filterUnits: 0,
-    floodColor: 0,
-    floodOpacity: 0,
-    focusable: 0,
-    fontFamily: 0,
-    fontSize: 0,
-    fontSizeAdjust: 0,
-    fontStretch: 0,
-    fontStyle: 0,
-    fontVariant: 0,
-    fontWeight: 0,
-    format: 0,
-    from: 0,
-    fx: 0,
-    fy: 0,
-    g1: 0,
-    g2: 0,
-    glyphName: 0,
-    glyphOrientationHorizontal: 0,
-    glyphOrientationVertical: 0,
-    glyphRef: 0,
-    gradientTransform: 0,
-    gradientUnits: 0,
-    hanging: 0,
-    horizAdvX: 0,
-    horizOriginX: 0,
-    ideographic: 0,
-    imageRendering: 0,
-    in: 0,
-    in2: 0,
-    intercept: 0,
-    k: 0,
-    k1: 0,
-    k2: 0,
-    k3: 0,
-    k4: 0,
-    kernelMatrix: 0,
-    kernelUnitLength: 0,
-    kerning: 0,
-    keyPoints: 0,
-    keySplines: 0,
-    keyTimes: 0,
-    lengthAdjust: 0,
-    letterSpacing: 0,
-    lightingColor: 0,
-    limitingConeAngle: 0,
-    local: 0,
-    markerEnd: 0,
-    markerMid: 0,
-    markerStart: 0,
-    markerHeight: 0,
-    markerUnits: 0,
-    markerWidth: 0,
-    mask: 0,
-    maskContentUnits: 0,
-    maskUnits: 0,
-    mathematical: 0,
-    mode: 0,
-    numOctaves: 0,
-    offset: 0,
-    opacity: 0,
-    operator: 0,
-    order: 0,
-    orient: 0,
-    orientation: 0,
-    origin: 0,
-    overflow: 0,
-    overlinePosition: 0,
-    overlineThickness: 0,
-    paintOrder: 0,
-    panose1: 0,
-    pathLength: 0,
-    patternContentUnits: 0,
-    patternTransform: 0,
-    patternUnits: 0,
-    pointerEvents: 0,
-    points: 0,
-    pointsAtX: 0,
-    pointsAtY: 0,
-    pointsAtZ: 0,
-    preserveAlpha: 0,
-    preserveAspectRatio: 0,
-    primitiveUnits: 0,
-    r: 0,
-    radius: 0,
-    refX: 0,
-    refY: 0,
-    renderingIntent: 0,
-    repeatCount: 0,
-    repeatDur: 0,
-    requiredExtensions: 0,
-    requiredFeatures: 0,
-    restart: 0,
-    result: 0,
-    rotate: 0,
-    rx: 0,
-    ry: 0,
-    scale: 0,
-    seed: 0,
-    shapeRendering: 0,
-    slope: 0,
-    spacing: 0,
-    specularConstant: 0,
-    specularExponent: 0,
-    speed: 0,
-    spreadMethod: 0,
-    startOffset: 0,
-    stdDeviation: 0,
-    stemh: 0,
-    stemv: 0,
-    stitchTiles: 0,
-    stopColor: 0,
-    stopOpacity: 0,
-    strikethroughPosition: 0,
-    strikethroughThickness: 0,
-    string: 0,
-    stroke: 0,
-    strokeDasharray: 0,
-    strokeDashoffset: 0,
-    strokeLinecap: 0,
-    strokeLinejoin: 0,
-    strokeMiterlimit: 0,
-    strokeOpacity: 0,
-    strokeWidth: 0,
-    surfaceScale: 0,
-    systemLanguage: 0,
-    tableValues: 0,
-    targetX: 0,
-    targetY: 0,
-    textAnchor: 0,
-    textDecoration: 0,
-    textRendering: 0,
-    textLength: 0,
-    to: 0,
-    transform: 0,
-    u1: 0,
-    u2: 0,
-    underlinePosition: 0,
-    underlineThickness: 0,
-    unicode: 0,
-    unicodeBidi: 0,
-    unicodeRange: 0,
-    unitsPerEm: 0,
-    vAlphabetic: 0,
-    vHanging: 0,
-    vIdeographic: 0,
-    vMathematical: 0,
-    values: 0,
-    vectorEffect: 0,
-    version: 0,
-    vertAdvY: 0,
-    vertOriginX: 0,
-    vertOriginY: 0,
-    viewBox: 0,
-    viewTarget: 0,
-    visibility: 0,
-    widths: 0,
-    wordSpacing: 0,
-    writingMode: 0,
-    x: 0,
-    xHeight: 0,
-    x1: 0,
-    x2: 0,
-    xChannelSelector: 0,
-    xlinkActuate: 0,
-    xlinkArcrole: 0,
-    xlinkHref: 0,
-    xlinkRole: 0,
-    xlinkShow: 0,
-    xlinkTitle: 0,
-    xlinkType: 0,
-    xmlBase: 0,
-    xmlns: 0,
-    xmlnsXlink: 0,
-    xmlLang: 0,
-    xmlSpace: 0,
-    y: 0,
-    y1: 0,
-    y2: 0,
-    yChannelSelector: 0,
-    z: 0,
-    zoomAndPan: 0
-  },
-  DOMAttributeNames: {
-    accentHeight: 'accent-height',
-    alignmentBaseline: 'alignment-baseline',
-    arabicForm: 'arabic-form',
-    baselineShift: 'baseline-shift',
-    capHeight: 'cap-height',
-    clipPath: 'clip-path',
-    clipRule: 'clip-rule',
-    colorInterpolation: 'color-interpolation',
-    colorInterpolationFilters: 'color-interpolation-filters',
-    colorProfile: 'color-profile',
-    colorRendering: 'color-rendering',
-    dominantBaseline: 'dominant-baseline',
-    enableBackground: 'enable-background',
-    fillOpacity: 'fill-opacity',
-    fillRule: 'fill-rule',
-    floodColor: 'flood-color',
-    floodOpacity: 'flood-opacity',
-    fontFamily: 'font-family',
-    fontSize: 'font-size',
-    fontSizeAdjust: 'font-size-adjust',
-    fontStretch: 'font-stretch',
-    fontStyle: 'font-style',
-    fontVariant: 'font-variant',
-    fontWeight: 'font-weight',
-    glyphName: 'glyph-name',
-    glyphOrientationHorizontal: 'glyph-orientation-horizontal',
-    glyphOrientationVertical: 'glyph-orientation-vertical',
-    horizAdvX: 'horiz-adv-x',
-    horizOriginX: 'horiz-origin-x',
-    imageRendering: 'image-rendering',
-    letterSpacing: 'letter-spacing',
-    lightingColor: 'lighting-color',
-    markerEnd: 'marker-end',
-    markerMid: 'marker-mid',
-    markerStart: 'marker-start',
-    overlinePosition: 'overline-position',
-    overlineThickness: 'overline-thickness',
-    paintOrder: 'paint-order',
-    panose1: 'panose-1',
-    pointerEvents: 'pointer-events',
-    renderingIntent: 'rendering-intent',
-    shapeRendering: 'shape-rendering',
-    stopColor: 'stop-color',
-    stopOpacity: 'stop-opacity',
-    strikethroughPosition: 'strikethrough-position',
-    strikethroughThickness: 'strikethrough-thickness',
-    strokeDasharray: 'stroke-dasharray',
-    strokeDashoffset: 'stroke-dashoffset',
-    strokeLinecap: 'stroke-linecap',
-    strokeLinejoin: 'stroke-linejoin',
-    strokeMiterlimit: 'stroke-miterlimit',
-    strokeOpacity: 'stroke-opacity',
-    strokeWidth: 'stroke-width',
-    textAnchor: 'text-anchor',
-    textDecoration: 'text-decoration',
-    textRendering: 'text-rendering',
-    underlinePosition: 'underline-position',
-    underlineThickness: 'underline-thickness',
-    unicodeBidi: 'unicode-bidi',
-    unicodeRange: 'unicode-range',
-    unitsPerEm: 'units-per-em',
-    vAlphabetic: 'v-alphabetic',
-    vHanging: 'v-hanging',
-    vIdeographic: 'v-ideographic',
-    vMathematical: 'v-mathematical',
-    vectorEffect: 'vector-effect',
-    vertAdvY: 'vert-adv-y',
-    vertOriginX: 'vert-origin-x',
-    vertOriginY: 'vert-origin-y',
-    wordSpacing: 'word-spacing',
-    writingMode: 'writing-mode',
-    xHeight: 'x-height',
-    xlinkActuate: 'xlink:actuate',
-    xlinkArcrole: 'xlink:arcrole',
-    xlinkHref: 'xlink:href',
-    xlinkRole: 'xlink:role',
-    xlinkShow: 'xlink:show',
-    xlinkTitle: 'xlink:title',
-    xlinkType: 'xlink:type',
-    xmlBase: 'xml:base',
-    xmlnsXlink: 'xmlns:xlink',
-    xmlLang: 'xml:lang',
-    xmlSpace: 'xml:space'
-  }
-};
-
-},{}],"node_modules/react-property/lib/injection.js":[function(require,module,exports) {
-module.exports = {
-  MUST_USE_PROPERTY: 1,
-  HAS_BOOLEAN_VALUE: 4,
-  HAS_NUMERIC_VALUE: 8,
-  HAS_POSITIVE_NUMERIC_VALUE: 24,
-  HAS_OVERLOADED_BOOLEAN_VALUE: 32
-};
-
-},{}],"node_modules/react-property/index.js":[function(require,module,exports) {
-var HTMLDOMPropertyConfig = require('./lib/HTMLDOMPropertyConfig');
-var SVGDOMPropertyConfig = require('./lib/SVGDOMPropertyConfig');
-var injection = require('./lib/injection');
-
-var MUST_USE_PROPERTY = injection.MUST_USE_PROPERTY;
-var HAS_BOOLEAN_VALUE = injection.HAS_BOOLEAN_VALUE;
-var HAS_NUMERIC_VALUE = injection.HAS_NUMERIC_VALUE;
-var HAS_POSITIVE_NUMERIC_VALUE = injection.HAS_POSITIVE_NUMERIC_VALUE;
-var HAS_OVERLOADED_BOOLEAN_VALUE = injection.HAS_OVERLOADED_BOOLEAN_VALUE;
-
-/**
- * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/DOMProperty.js#L14-L16
- *
- * @param  {Number}  value
- * @param  {Number}  bitmask
- * @return {Boolean}
- */
-function checkMask(value, bitmask) {
-  return (value & bitmask) === bitmask;
-}
-
-/**
- * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/DOMProperty.js#L57
- *
- * @param {Object}  domPropertyConfig - HTMLDOMPropertyConfig or SVGDOMPropertyConfig
- * @param {Object}  config            - The object to be mutated
- * @param {Boolean} isSVG             - Whether the injected config is HTML or SVG (it assumes the default is HTML)
- */
-function injectDOMPropertyConfig(domPropertyConfig, config, isSVG) {
-  var Properties = domPropertyConfig.Properties;
-  var DOMAttributeNames = domPropertyConfig.DOMAttributeNames;
-  var attributeName;
-  var propertyName;
-  var propConfig;
-
-  for (propertyName in Properties) {
-    attributeName =
-      DOMAttributeNames[propertyName] ||
-      (isSVG ? propertyName : propertyName.toLowerCase());
-    propConfig = Properties[propertyName];
-
-    config[attributeName] = {
-      attributeName: attributeName,
-      propertyName: propertyName,
-      mustUseProperty: checkMask(propConfig, MUST_USE_PROPERTY),
-      hasBooleanValue: checkMask(propConfig, HAS_BOOLEAN_VALUE),
-      hasNumericValue: checkMask(propConfig, HAS_NUMERIC_VALUE),
-      hasPositiveNumericValue: checkMask(
-        propConfig,
-        HAS_POSITIVE_NUMERIC_VALUE
-      ),
-      hasOverloadedBooleanValue: checkMask(
-        propConfig,
-        HAS_OVERLOADED_BOOLEAN_VALUE
-      )
-    };
-  }
-}
-
-/**
- * HTML properties config.
- *
- * @type {Object}
- */
-var html = {};
-injectDOMPropertyConfig(HTMLDOMPropertyConfig, html);
-
-/**
- * SVG properties config.
- *
- * @type {Object}
- */
-var svg = {};
-injectDOMPropertyConfig(SVGDOMPropertyConfig, svg, true);
-
-/**
- * HTML and SVG properties config.
- *
- * @type {Object}
- */
-var properties = {};
-injectDOMPropertyConfig(HTMLDOMPropertyConfig, properties);
-injectDOMPropertyConfig(SVGDOMPropertyConfig, properties, true);
-
-var ATTRIBUTE_NAME_START_CHAR =
-  ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
-var ATTRIBUTE_NAME_CHAR =
-  ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040';
-
-module.exports = {
-  html: html,
-  svg: svg,
-  properties: properties,
-
-  /**
-   * Checks whether a property name is a custom attribute.
-   *
-   * @see https://github.com/facebook/react/blob/15-stable/src/renderers/dom/shared/HTMLDOMPropertyConfig.js#L23-L25
-   *
-   * @param {String}
-   * @return {Boolean}
-   */
-  isCustomAttribute: RegExp.prototype.test.bind(
-    new RegExp('^(data|aria)-[' + ATTRIBUTE_NAME_CHAR + ']*$')
-  )
-};
-
-},{"./lib/HTMLDOMPropertyConfig":"node_modules/react-property/lib/HTMLDOMPropertyConfig.js","./lib/SVGDOMPropertyConfig":"node_modules/react-property/lib/SVGDOMPropertyConfig.js","./lib/injection":"node_modules/react-property/lib/injection.js"}],"node_modules/inline-style-parser/index.js":[function(require,module,exports) {
-// http://www.w3.org/TR/CSS21/grammar.html
-// https://github.com/visionmedia/css-parse/pull/49#issuecomment-30088027
-var COMMENT_REGEX = /\/\*[^*]*\*+([^/*][^*]*\*+)*\//g;
-
-var NEWLINE_REGEX = /\n/g;
-var WHITESPACE_REGEX = /^\s*/;
-
-// declaration
-var PROPERTY_REGEX = /^(\*?[-#/*\\\w]+(\[[0-9a-z_-]+\])?)\s*/;
-var COLON_REGEX = /^:\s*/;
-var VALUE_REGEX = /^((?:'(?:\\'|.)*?'|"(?:\\"|.)*?"|\([^)]*?\)|[^};])+)/;
-var SEMICOLON_REGEX = /^[;\s]*/;
-
-// https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
-var TRIM_REGEX = /^\s+|\s+$/g;
-
-// strings
-var NEWLINE = '\n';
-var FORWARD_SLASH = '/';
-var ASTERISK = '*';
-var EMPTY_STRING = '';
-
-// types
-var TYPE_COMMENT = 'comment';
-var TYPE_DECLARATION = 'declaration';
-
-/**
- * @param {String} style
- * @param {Object} [options]
- * @return {Object[]}
- * @throws {TypeError}
- * @throws {Error}
- */
-module.exports = function(style, options) {
-  if (typeof style !== 'string') {
-    throw new TypeError('First argument must be a string');
-  }
-
-  if (!style) return [];
-
-  options = options || {};
-
-  /**
-   * Positional.
-   */
-  var lineno = 1;
-  var column = 1;
-
-  /**
-   * Update lineno and column based on `str`.
-   *
-   * @param {String} str
-   */
-  function updatePosition(str) {
-    var lines = str.match(NEWLINE_REGEX);
-    if (lines) lineno += lines.length;
-    var i = str.lastIndexOf(NEWLINE);
-    column = ~i ? str.length - i : column + str.length;
-  }
-
-  /**
-   * Mark position and patch `node.position`.
-   *
-   * @return {Function}
-   */
-  function position() {
-    var start = { line: lineno, column: column };
-    return function(node) {
-      node.position = new Position(start);
-      whitespace();
-      return node;
-    };
-  }
-
-  /**
-   * Store position information for a node.
-   *
-   * @constructor
-   * @property {Object} start
-   * @property {Object} end
-   * @property {undefined|String} source
-   */
-  function Position(start) {
-    this.start = start;
-    this.end = { line: lineno, column: column };
-    this.source = options.source;
-  }
-
-  /**
-   * Non-enumerable source string.
-   */
-  Position.prototype.content = style;
-
-  var errorsList = [];
-
-  /**
-   * Error `msg`.
-   *
-   * @param {String} msg
-   * @throws {Error}
-   */
-  function error(msg) {
-    var err = new Error(
-      options.source + ':' + lineno + ':' + column + ': ' + msg
-    );
-    err.reason = msg;
-    err.filename = options.source;
-    err.line = lineno;
-    err.column = column;
-    err.source = style;
-
-    if (options.silent) {
-      errorsList.push(err);
-    } else {
-      throw err;
-    }
-  }
-
-  /**
-   * Match `re` and return captures.
-   *
-   * @param {RegExp} re
-   * @return {undefined|Array}
-   */
-  function match(re) {
-    var m = re.exec(style);
-    if (!m) return;
-    var str = m[0];
-    updatePosition(str);
-    style = style.slice(str.length);
-    return m;
-  }
-
-  /**
-   * Parse whitespace.
-   */
-  function whitespace() {
-    match(WHITESPACE_REGEX);
-  }
-
-  /**
-   * Parse comments.
-   *
-   * @param {Object[]} [rules]
-   * @return {Object[]}
-   */
-  function comments(rules) {
-    var c;
-    rules = rules || [];
-    while ((c = comment())) {
-      if (c !== false) {
-        rules.push(c);
-      }
-    }
-    return rules;
-  }
-
-  /**
-   * Parse comment.
-   *
-   * @return {Object}
-   * @throws {Error}
-   */
-  function comment() {
-    var pos = position();
-    if (FORWARD_SLASH != style.charAt(0) || ASTERISK != style.charAt(1)) return;
-
-    var i = 2;
-    while (
-      EMPTY_STRING != style.charAt(i) &&
-      (ASTERISK != style.charAt(i) || FORWARD_SLASH != style.charAt(i + 1))
-    ) {
-      ++i;
-    }
-    i += 2;
-
-    if (EMPTY_STRING === style.charAt(i - 1)) {
-      return error('End of comment missing');
-    }
-
-    var str = style.slice(2, i - 2);
-    column += 2;
-    updatePosition(str);
-    style = style.slice(i);
-    column += 2;
-
-    return pos({
-      type: TYPE_COMMENT,
-      comment: str
-    });
-  }
-
-  /**
-   * Parse declaration.
-   *
-   * @return {Object}
-   * @throws {Error}
-   */
-  function declaration() {
-    var pos = position();
-
-    // prop
-    var prop = match(PROPERTY_REGEX);
-    if (!prop) return;
-    comment();
-
-    // :
-    if (!match(COLON_REGEX)) return error("property missing ':'");
-
-    // val
-    var val = match(VALUE_REGEX);
-
-    var ret = pos({
-      type: TYPE_DECLARATION,
-      property: trim(prop[0].replace(COMMENT_REGEX, EMPTY_STRING)),
-      value: val
-        ? trim(val[0].replace(COMMENT_REGEX, EMPTY_STRING))
-        : EMPTY_STRING
-    });
-
-    // ;
-    match(SEMICOLON_REGEX);
-
-    return ret;
-  }
-
-  /**
-   * Parse declarations.
-   *
-   * @return {Object[]}
-   */
-  function declarations() {
-    var decls = [];
-
-    comments(decls);
-
-    // declarations
-    var decl;
-    while ((decl = declaration())) {
-      if (decl !== false) {
-        decls.push(decl);
-        comments(decls);
-      }
-    }
-
-    return decls;
-  }
-
-  whitespace();
-  return declarations();
-};
-
-/**
- * Trim `str`.
- *
- * @param {String} str
- * @return {String}
- */
-function trim(str) {
-  return str ? str.replace(TRIM_REGEX, EMPTY_STRING) : EMPTY_STRING;
-}
-
-},{}],"node_modules/style-to-object/index.js":[function(require,module,exports) {
-var parse = require('inline-style-parser');
-
-/**
- * Parses inline style to object.
- *
- * @example
- * // returns { 'line-height': '42' }
- * StyleToObject('line-height: 42;');
- *
- * @param  {String}      style      - The inline style.
- * @param  {Function}    [iterator] - The iterator function.
- * @return {null|Object}
- */
-function StyleToObject(style, iterator) {
-  var output = null;
-  if (!style || typeof style !== 'string') {
-    return output;
-  }
-
-  var declaration;
-  var declarations = parse(style);
-  var hasIterator = typeof iterator === 'function';
-  var property;
-  var value;
-
-  for (var i = 0, len = declarations.length; i < len; i++) {
-    declaration = declarations[i];
-    property = declaration.property;
-    value = declaration.value;
-
-    if (hasIterator) {
-      iterator(property, value, declaration);
-    } else if (value) {
-      output || (output = {});
-      output[property] = value;
-    }
-  }
-
-  return output;
-}
-
-module.exports = StyleToObject;
-
-},{"inline-style-parser":"node_modules/inline-style-parser/index.js"}],"node_modules/style-to-js/cjs/utilities.js":[function(require,module,exports) {
-"use strict";
-exports.__esModule = true;
-exports.camelCase = void 0;
-var CUSTOM_PROPERTY_REGEX = /^--[a-zA-Z0-9-]+$/;
-var HYPHEN_REGEX = /-([a-z])/g;
-var NO_HYPHEN_REGEX = /^[^-]+$/;
-var VENDOR_PREFIX_REGEX = /^-(webkit|moz|ms|o|khtml)-/;
-var skipCamelCase = function (property) {
-    return !property ||
-        NO_HYPHEN_REGEX.test(property) ||
-        CUSTOM_PROPERTY_REGEX.test(property);
-};
-var capitalize = function (match, character) {
-    return character.toUpperCase();
-};
-var trimHyphen = function (match, prefix) { return prefix + "-"; };
-var camelCase = function (property, options) {
-    if (options === void 0) { options = {}; }
-    if (skipCamelCase(property)) {
-        return property;
-    }
-    property = property.toLowerCase();
-    if (!options.reactCompat) {
-        property = property.replace(VENDOR_PREFIX_REGEX, trimHyphen);
-    }
-    return property.replace(HYPHEN_REGEX, capitalize);
-};
-exports.camelCase = camelCase;
-
-},{}],"node_modules/style-to-js/cjs/index.js":[function(require,module,exports) {
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-exports.__esModule = true;
-var style_to_object_1 = __importDefault(require("style-to-object"));
-var utilities_1 = require("./utilities");
-function StyleToJS(style, options) {
-    var output = {};
-    if (!style || typeof style !== 'string') {
-        return output;
-    }
-    style_to_object_1["default"](style, function (property, value) {
-        if (property && value) {
-            output[utilities_1.camelCase(property, options)] = value;
-        }
-    });
-    return output;
-}
-exports["default"] = StyleToJS;
-
-},{"style-to-object":"node_modules/style-to-object/index.js","./utilities":"node_modules/style-to-js/cjs/utilities.js"}],"node_modules/html-react-parser/lib/utilities.js":[function(require,module,exports) {
-var React = require('react');
-var styleToJS = require('style-to-js').default;
-
-/**
- * Swap key with value in an object.
- *
- * @param  {Object}   obj        - The object.
- * @param  {Function} [override] - The override method.
- * @return {Object}              - The inverted object.
- */
-function invertObject(obj, override) {
-  if (!obj || typeof obj !== 'object') {
-    throw new TypeError('First argument must be an object');
-  }
-
-  var key;
-  var value;
-  var isOverridePresent = typeof override === 'function';
-  var overrides = {};
-  var result = {};
-
-  for (key in obj) {
-    value = obj[key];
-
-    if (isOverridePresent) {
-      overrides = override(key, value);
-      if (overrides && overrides.length === 2) {
-        result[overrides[0]] = overrides[1];
-        continue;
-      }
-    }
-
-    if (typeof value === 'string') {
-      result[value] = key;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Check if a given tag is a custom component.
- *
- * @see {@link https://github.com/facebook/react/blob/v16.6.3/packages/react-dom/src/shared/isCustomComponent.js}
- *
- * @param {string} tagName - The name of the html tag.
- * @param {Object} props   - The props being passed to the element.
- * @return {boolean}
- */
-function isCustomComponent(tagName, props) {
-  if (tagName.indexOf('-') === -1) {
-    return props && typeof props.is === 'string';
-  }
-
-  switch (tagName) {
-    // These are reserved SVG and MathML elements.
-    // We don't mind this whitelist too much because we expect it to never grow.
-    // The alternative is to track the namespace in a few places which is convoluted.
-    // https://w3c.github.io/webcomponents/spec/custom/#custom-elements-core-concepts
-    case 'annotation-xml':
-    case 'color-profile':
-    case 'font-face':
-    case 'font-face-src':
-    case 'font-face-uri':
-    case 'font-face-format':
-    case 'font-face-name':
-    case 'missing-glyph':
-      return false;
-    default:
-      return true;
-  }
-}
-
-var styleToJSOptions = { reactCompat: true };
-
-/**
- * Sets style prop.
- *
- * @param {null|undefined|string} style
- * @param {object} props
- */
-function setStyleProp(style, props) {
-  if (style === null || style === undefined) {
-    return;
-  }
-  try {
-    props.style = styleToJS(style, styleToJSOptions);
-  } catch (err) {
-    props.style = {};
-  }
-}
-
-/**
- * @constant {boolean}
- * @see {@link https://reactjs.org/blog/2017/09/08/dom-attributes-in-react-16.html}
- */
-var PRESERVE_CUSTOM_ATTRIBUTES = React.version.split('.')[0] >= 16;
-
-module.exports = {
-  PRESERVE_CUSTOM_ATTRIBUTES: PRESERVE_CUSTOM_ATTRIBUTES,
-  invertObject: invertObject,
-  isCustomComponent: isCustomComponent,
-  setStyleProp: setStyleProp
-};
-
-},{"react":"node_modules/react/index.js","style-to-js":"node_modules/style-to-js/cjs/index.js"}],"node_modules/html-react-parser/lib/attributes-to-props.js":[function(require,module,exports) {
-var reactProperty = require('react-property');
-var utilities = require('./utilities');
-
-var setStyleProp = utilities.setStyleProp;
-
-var htmlProperties = reactProperty.html;
-var svgProperties = reactProperty.svg;
-var isCustomAttribute = reactProperty.isCustomAttribute;
-
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-/**
- * Converts HTML/SVG DOM attributes to React props.
- *
- * @param  {object} [attributes={}] - HTML/SVG DOM attributes.
- * @return {object}                 - React props.
- */
-function attributesToProps(attributes) {
-  attributes = attributes || {};
-
-  var attributeName;
-  var attributeNameLowerCased;
-  var attributeValue;
-  var property;
-  var props = {};
-
-  for (attributeName in attributes) {
-    attributeValue = attributes[attributeName];
-
-    // ARIA (aria-*) or custom data (data-*) attribute
-    if (isCustomAttribute(attributeName)) {
-      props[attributeName] = attributeValue;
-      continue;
-    }
-
-    // convert HTML attribute to React prop
-    attributeNameLowerCased = attributeName.toLowerCase();
-    if (hasOwnProperty.call(htmlProperties, attributeNameLowerCased)) {
-      property = htmlProperties[attributeNameLowerCased];
-      props[property.propertyName] =
-        property.hasBooleanValue ||
-        (property.hasOverloadedBooleanValue && !attributeValue)
-          ? true
-          : attributeValue;
-      continue;
-    }
-
-    // convert SVG attribute to React prop
-    if (hasOwnProperty.call(svgProperties, attributeName)) {
-      property = svgProperties[attributeName];
-      props[property.propertyName] = attributeValue;
-      continue;
-    }
-
-    // preserve custom attribute if React >=16
-    if (utilities.PRESERVE_CUSTOM_ATTRIBUTES) {
-      props[attributeName] = attributeValue;
-    }
-  }
-
-  // transform inline style to object
-  setStyleProp(attributes.style, props);
-
-  return props;
-}
-
-module.exports = attributesToProps;
-
-},{"react-property":"node_modules/react-property/index.js","./utilities":"node_modules/html-react-parser/lib/utilities.js"}],"node_modules/html-react-parser/lib/dom-to-react.js":[function(require,module,exports) {
-var React = require('react');
-var attributesToProps = require('./attributes-to-props');
-var utilities = require('./utilities');
-
-var setStyleProp = utilities.setStyleProp;
-
-/**
- * Converts DOM nodes to JSX element(s).
- *
- * @param  {DomElement[]} nodes             - DOM nodes.
- * @param  {object}       [options={}]      - Options.
- * @param  {Function}     [options.replace] - Replacer.
- * @param  {object}       [options.library] - Library (React/Preact/etc.).
- * @return {string|JSX.Element|JSX.Element[]}
- */
-function domToReact(nodes, options) {
-  options = options || {};
-
-  var library = options.library || React;
-  var cloneElement = library.cloneElement;
-  var createElement = library.createElement;
-  var isValidElement = library.isValidElement;
-
-  var result = [];
-  var node;
-  var hasReplace = typeof options.replace === 'function';
-  var replaceElement;
-  var props;
-  var children;
-  var data;
-  var trim = options.trim;
-
-  for (var i = 0, len = nodes.length; i < len; i++) {
-    node = nodes[i];
-
-    // replace with custom React element (if present)
-    if (hasReplace) {
-      replaceElement = options.replace(node);
-
-      if (isValidElement(replaceElement)) {
-        // set "key" prop for sibling elements
-        // https://fb.me/react-warning-keys
-        if (len > 1) {
-          replaceElement = cloneElement(replaceElement, {
-            key: replaceElement.key || i
-          });
-        }
-        result.push(replaceElement);
-        continue;
-      }
-    }
-
-    if (node.type === 'text') {
-      // if trim option is enabled, skip whitespace text nodes
-      if (trim) {
-        data = node.data.trim();
-        if (data) {
-          result.push(node.data);
-        }
-      } else {
-        result.push(node.data);
-      }
-      continue;
-    }
-
-    props = node.attribs;
-    if (skipAttributesToProps(node)) {
-      setStyleProp(props.style, props);
-    } else if (props) {
-      props = attributesToProps(props);
-    }
-
-    children = null;
-
-    switch (node.type) {
-      case 'script':
-      case 'style':
-        // prevent text in <script> or <style> from being escaped
-        // https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml
-        if (node.children[0]) {
-          props.dangerouslySetInnerHTML = {
-            __html: node.children[0].data
-          };
-        }
-        break;
-
-      case 'tag':
-        // setting textarea value in children is an antipattern in React
-        // https://reactjs.org/docs/forms.html#the-textarea-tag
-        if (node.name === 'textarea' && node.children[0]) {
-          props.defaultValue = node.children[0].data;
-        } else if (node.children && node.children.length) {
-          // continue recursion of creating React elements (if applicable)
-          children = domToReact(node.children, options);
-        }
-        break;
-
-      // skip all other cases (e.g., comment)
-      default:
-        continue;
-    }
-
-    // set "key" prop for sibling elements
-    // https://fb.me/react-warning-keys
-    if (len > 1) {
-      props.key = i;
-    }
-
-    result.push(createElement(node.name, props, children));
-  }
-
-  return result.length === 1 ? result[0] : result;
-}
-
-/**
- * Determines whether DOM element attributes should be transformed to props.
- * Web Components should not have their attributes transformed except for `style`.
- *
- * @param  {DomElement} node
- * @return {boolean}
- */
-function skipAttributesToProps(node) {
-  return (
-    utilities.PRESERVE_CUSTOM_ATTRIBUTES &&
-    node.type === 'tag' &&
-    utilities.isCustomComponent(node.name, node.attribs)
-  );
-}
-
-module.exports = domToReact;
-
-},{"react":"node_modules/react/index.js","./attributes-to-props":"node_modules/html-react-parser/lib/attributes-to-props.js","./utilities":"node_modules/html-react-parser/lib/utilities.js"}],"node_modules/html-dom-parser/lib/client/constants.js":[function(require,module,exports) {
-/**
- * SVG elements are case-sensitive.
- *
- * @see {@link https://developer.mozilla.org/docs/Web/SVG/Element#SVG_elements_A_to_Z}
- */
-var CASE_SENSITIVE_TAG_NAMES = [
-  'animateMotion',
-  'animateTransform',
-  'clipPath',
-  'feBlend',
-  'feColorMatrix',
-  'feComponentTransfer',
-  'feComposite',
-  'feConvolveMatrix',
-  'feDiffuseLighting',
-  'feDisplacementMap',
-  'feDropShadow',
-  'feFlood',
-  'feFuncA',
-  'feFuncB',
-  'feFuncG',
-  'feFuncR',
-  'feGaussainBlur',
-  'feImage',
-  'feMerge',
-  'feMergeNode',
-  'feMorphology',
-  'feOffset',
-  'fePointLight',
-  'feSpecularLighting',
-  'feSpotLight',
-  'feTile',
-  'feTurbulence',
-  'foreignObject',
-  'linearGradient',
-  'radialGradient',
-  'textPath'
-];
-
-module.exports = {
-  CASE_SENSITIVE_TAG_NAMES: CASE_SENSITIVE_TAG_NAMES
-};
-
-},{}],"node_modules/html-dom-parser/node_modules/domelementtype/lib/index.js":[function(require,module,exports) {
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Doctype = exports.CDATA = exports.Tag = exports.Style = exports.Script = exports.Comment = exports.Directive = exports.Text = exports.Root = exports.isTag = exports.ElementType = void 0;
-/** Types of elements found in htmlparser2's DOM */
-var ElementType;
-(function (ElementType) {
-    /** Type for the root element of a document */
-    ElementType["Root"] = "root";
-    /** Type for Text */
-    ElementType["Text"] = "text";
-    /** Type for <? ... ?> */
-    ElementType["Directive"] = "directive";
-    /** Type for <!-- ... --> */
-    ElementType["Comment"] = "comment";
-    /** Type for <script> tags */
-    ElementType["Script"] = "script";
-    /** Type for <style> tags */
-    ElementType["Style"] = "style";
-    /** Type for Any tag */
-    ElementType["Tag"] = "tag";
-    /** Type for <![CDATA[ ... ]]> */
-    ElementType["CDATA"] = "cdata";
-    /** Type for <!doctype ...> */
-    ElementType["Doctype"] = "doctype";
-})(ElementType = exports.ElementType || (exports.ElementType = {}));
-/**
- * Tests whether an element is a tag or not.
- *
- * @param elem Element to test
- */
-function isTag(elem) {
-    return (elem.type === ElementType.Tag ||
-        elem.type === ElementType.Script ||
-        elem.type === ElementType.Style);
-}
-exports.isTag = isTag;
-// Exports for backwards compatibility
-/** Type for the root element of a document */
-exports.Root = ElementType.Root;
-/** Type for Text */
-exports.Text = ElementType.Text;
-/** Type for <? ... ?> */
-exports.Directive = ElementType.Directive;
-/** Type for <!-- ... --> */
-exports.Comment = ElementType.Comment;
-/** Type for <script> tags */
-exports.Script = ElementType.Script;
-/** Type for <style> tags */
-exports.Style = ElementType.Style;
-/** Type for Any tag */
-exports.Tag = ElementType.Tag;
-/** Type for <![CDATA[ ... ]]> */
-exports.CDATA = ElementType.CDATA;
-/** Type for <!doctype ...> */
-exports.Doctype = ElementType.Doctype;
-
-},{}],"node_modules/html-dom-parser/node_modules/domhandler/lib/node.js":[function(require,module,exports) {
-"use strict";
-
-var __extends = this && this.__extends || function () {
-  var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf || {
-      __proto__: []
-    } instanceof Array && function (d, b) {
-      d.__proto__ = b;
-    } || function (d, b) {
-      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-    };
-
-    return extendStatics(d, b);
-  };
-
-  return function (d, b) {
-    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-
-    function __() {
-      this.constructor = d;
-    }
-
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
-}();
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.cloneNode = exports.hasChildren = exports.isDocument = exports.isDirective = exports.isComment = exports.isText = exports.isCDATA = exports.isTag = exports.Element = exports.Document = exports.NodeWithChildren = exports.ProcessingInstruction = exports.Comment = exports.Text = exports.DataNode = exports.Node = void 0;
-
-var domelementtype_1 = require("domelementtype");
-
-var nodeTypes = new Map([[domelementtype_1.ElementType.Tag, 1], [domelementtype_1.ElementType.Script, 1], [domelementtype_1.ElementType.Style, 1], [domelementtype_1.ElementType.Directive, 1], [domelementtype_1.ElementType.Text, 3], [domelementtype_1.ElementType.CDATA, 4], [domelementtype_1.ElementType.Comment, 8], [domelementtype_1.ElementType.Root, 9]]);
-/**
- * This object will be used as the prototype for Nodes when creating a
- * DOM-Level-1-compliant structure.
- */
-
-var Node = function () {
-  /**
-   *
-   * @param type The type of the node.
-   */
-  function Node(type) {
-    this.type = type;
-    /** Parent of the node */
-
-    this.parent = null;
-    /** Previous sibling */
-
-    this.prev = null;
-    /** Next sibling */
-
-    this.next = null;
-    /** The start index of the node. Requires `withStartIndices` on the handler to be `true. */
-
-    this.startIndex = null;
-    /** The end index of the node. Requires `withEndIndices` on the handler to be `true. */
-
-    this.endIndex = null;
-  }
-
-  Object.defineProperty(Node.prototype, "nodeType", {
-    // Read-only aliases
-    get: function () {
-      var _a;
-
-      return (_a = nodeTypes.get(this.type)) !== null && _a !== void 0 ? _a : 1;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Node.prototype, "parentNode", {
-    // Read-write aliases for properties
-    get: function () {
-      return this.parent;
-    },
-    set: function (parent) {
-      this.parent = parent;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Node.prototype, "previousSibling", {
-    get: function () {
-      return this.prev;
-    },
-    set: function (prev) {
-      this.prev = prev;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Node.prototype, "nextSibling", {
-    get: function () {
-      return this.next;
-    },
-    set: function (next) {
-      this.next = next;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  /**
-   * Clone this node, and optionally its children.
-   *
-   * @param recursive Clone child nodes as well.
-   * @returns A clone of the node.
-   */
-
-  Node.prototype.cloneNode = function (recursive) {
-    if (recursive === void 0) {
-      recursive = false;
-    }
-
-    return cloneNode(this, recursive);
-  };
-
-  return Node;
-}();
-
-exports.Node = Node;
-
-var DataNode = function (_super) {
-  __extends(DataNode, _super);
-  /**
-   * @param type The type of the node
-   * @param data The content of the data node
-   */
-
-
-  function DataNode(type, data) {
-    var _this = _super.call(this, type) || this;
-
-    _this.data = data;
-    return _this;
-  }
-
-  Object.defineProperty(DataNode.prototype, "nodeValue", {
-    get: function () {
-      return this.data;
-    },
-    set: function (data) {
-      this.data = data;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  return DataNode;
-}(Node);
-
-exports.DataNode = DataNode;
-
-var Text = function (_super) {
-  __extends(Text, _super);
-
-  function Text(data) {
-    return _super.call(this, domelementtype_1.ElementType.Text, data) || this;
-  }
-
-  return Text;
-}(DataNode);
-
-exports.Text = Text;
-
-var Comment = function (_super) {
-  __extends(Comment, _super);
-
-  function Comment(data) {
-    return _super.call(this, domelementtype_1.ElementType.Comment, data) || this;
-  }
-
-  return Comment;
-}(DataNode);
-
-exports.Comment = Comment;
-
-var ProcessingInstruction = function (_super) {
-  __extends(ProcessingInstruction, _super);
-
-  function ProcessingInstruction(name, data) {
-    var _this = _super.call(this, domelementtype_1.ElementType.Directive, data) || this;
-
-    _this.name = name;
-    return _this;
-  }
-
-  return ProcessingInstruction;
-}(DataNode);
-
-exports.ProcessingInstruction = ProcessingInstruction;
-/**
- * A `Node` that can have children.
- */
-
-var NodeWithChildren = function (_super) {
-  __extends(NodeWithChildren, _super);
-  /**
-   * @param type Type of the node.
-   * @param children Children of the node. Only certain node types can have children.
-   */
-
-
-  function NodeWithChildren(type, children) {
-    var _this = _super.call(this, type) || this;
-
-    _this.children = children;
-    return _this;
-  }
-
-  Object.defineProperty(NodeWithChildren.prototype, "firstChild", {
-    // Aliases
-    get: function () {
-      var _a;
-
-      return (_a = this.children[0]) !== null && _a !== void 0 ? _a : null;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(NodeWithChildren.prototype, "lastChild", {
-    get: function () {
-      return this.children.length > 0 ? this.children[this.children.length - 1] : null;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(NodeWithChildren.prototype, "childNodes", {
-    get: function () {
-      return this.children;
-    },
-    set: function (children) {
-      this.children = children;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  return NodeWithChildren;
-}(Node);
-
-exports.NodeWithChildren = NodeWithChildren;
-
-var Document = function (_super) {
-  __extends(Document, _super);
-
-  function Document(children) {
-    return _super.call(this, domelementtype_1.ElementType.Root, children) || this;
-  }
-
-  return Document;
-}(NodeWithChildren);
-
-exports.Document = Document;
-
-var Element = function (_super) {
-  __extends(Element, _super);
-  /**
-   * @param name Name of the tag, eg. `div`, `span`.
-   * @param attribs Object mapping attribute names to attribute values.
-   * @param children Children of the node.
-   */
-
-
-  function Element(name, attribs, children, type) {
-    if (children === void 0) {
-      children = [];
-    }
-
-    if (type === void 0) {
-      type = name === "script" ? domelementtype_1.ElementType.Script : name === "style" ? domelementtype_1.ElementType.Style : domelementtype_1.ElementType.Tag;
-    }
-
-    var _this = _super.call(this, type, children) || this;
-
-    _this.name = name;
-    _this.attribs = attribs;
-    return _this;
-  }
-
-  Object.defineProperty(Element.prototype, "tagName", {
-    // DOM Level 1 aliases
-    get: function () {
-      return this.name;
-    },
-    set: function (name) {
-      this.name = name;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Element.prototype, "attributes", {
-    get: function () {
-      var _this = this;
-
-      return Object.keys(this.attribs).map(function (name) {
-        var _a, _b;
-
-        return {
-          name: name,
-          value: _this.attribs[name],
-          namespace: (_a = _this["x-attribsNamespace"]) === null || _a === void 0 ? void 0 : _a[name],
-          prefix: (_b = _this["x-attribsPrefix"]) === null || _b === void 0 ? void 0 : _b[name]
-        };
-      });
-    },
-    enumerable: false,
-    configurable: true
-  });
-  return Element;
-}(NodeWithChildren);
-
-exports.Element = Element;
-/**
- * @param node Node to check.
- * @returns `true` if the node is a `Element`, `false` otherwise.
- */
-
-function isTag(node) {
-  return domelementtype_1.isTag(node);
-}
-
-exports.isTag = isTag;
-/**
- * @param node Node to check.
- * @returns `true` if the node has the type `CDATA`, `false` otherwise.
- */
-
-function isCDATA(node) {
-  return node.type === domelementtype_1.ElementType.CDATA;
-}
-
-exports.isCDATA = isCDATA;
-/**
- * @param node Node to check.
- * @returns `true` if the node has the type `Text`, `false` otherwise.
- */
-
-function isText(node) {
-  return node.type === domelementtype_1.ElementType.Text;
-}
-
-exports.isText = isText;
-/**
- * @param node Node to check.
- * @returns `true` if the node has the type `Comment`, `false` otherwise.
- */
-
-function isComment(node) {
-  return node.type === domelementtype_1.ElementType.Comment;
-}
-
-exports.isComment = isComment;
-/**
- * @param node Node to check.
- * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
- */
-
-function isDirective(node) {
-  return node.type === domelementtype_1.ElementType.Directive;
-}
-
-exports.isDirective = isDirective;
-/**
- * @param node Node to check.
- * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
- */
-
-function isDocument(node) {
-  return node.type === domelementtype_1.ElementType.Root;
-}
-
-exports.isDocument = isDocument;
-/**
- * @param node Node to check.
- * @returns `true` if the node is a `NodeWithChildren` (has children), `false` otherwise.
- */
-
-function hasChildren(node) {
-  return Object.prototype.hasOwnProperty.call(node, "children");
-}
-
-exports.hasChildren = hasChildren;
-/**
- * Clone a node, and optionally its children.
- *
- * @param recursive Clone child nodes as well.
- * @returns A clone of the node.
- */
-
-function cloneNode(node, recursive) {
-  if (recursive === void 0) {
-    recursive = false;
-  }
-
-  var result;
-
-  if (isText(node)) {
-    result = new Text(node.data);
-  } else if (isComment(node)) {
-    result = new Comment(node.data);
-  } else if (isTag(node)) {
-    var children = recursive ? cloneChildren(node.children) : [];
-    var clone_1 = new Element(node.name, __assign({}, node.attribs), children);
-    children.forEach(function (child) {
-      return child.parent = clone_1;
-    });
-
-    if (node["x-attribsNamespace"]) {
-      clone_1["x-attribsNamespace"] = __assign({}, node["x-attribsNamespace"]);
-    }
-
-    if (node["x-attribsPrefix"]) {
-      clone_1["x-attribsPrefix"] = __assign({}, node["x-attribsPrefix"]);
-    }
-
-    result = clone_1;
-  } else if (isCDATA(node)) {
-    var children = recursive ? cloneChildren(node.children) : [];
-    var clone_2 = new NodeWithChildren(domelementtype_1.ElementType.CDATA, children);
-    children.forEach(function (child) {
-      return child.parent = clone_2;
-    });
-    result = clone_2;
-  } else if (isDocument(node)) {
-    var children = recursive ? cloneChildren(node.children) : [];
-    var clone_3 = new Document(children);
-    children.forEach(function (child) {
-      return child.parent = clone_3;
-    });
-
-    if (node["x-mode"]) {
-      clone_3["x-mode"] = node["x-mode"];
-    }
-
-    result = clone_3;
-  } else if (isDirective(node)) {
-    var instruction = new ProcessingInstruction(node.name, node.data);
-
-    if (node["x-name"] != null) {
-      instruction["x-name"] = node["x-name"];
-      instruction["x-publicId"] = node["x-publicId"];
-      instruction["x-systemId"] = node["x-systemId"];
-    }
-
-    result = instruction;
-  } else {
-    throw new Error("Not implemented yet: " + node.type);
-  }
-
-  result.startIndex = node.startIndex;
-  result.endIndex = node.endIndex;
-  return result;
-}
-
-exports.cloneNode = cloneNode;
-
-function cloneChildren(childs) {
-  var children = childs.map(function (child) {
-    return cloneNode(child, true);
-  });
-
-  for (var i = 1; i < children.length; i++) {
-    children[i].prev = children[i - 1];
-    children[i - 1].next = children[i];
-  }
-
-  return children;
-}
-},{"domelementtype":"node_modules/html-dom-parser/node_modules/domelementtype/lib/index.js"}],"node_modules/html-dom-parser/lib/client/utilities.js":[function(require,module,exports) {
-var constants = require('./constants');
-var domhandler = require('domhandler/lib/node');
-
-var CASE_SENSITIVE_TAG_NAMES = constants.CASE_SENSITIVE_TAG_NAMES;
-
-var Comment = domhandler.Comment;
-var Element = domhandler.Element;
-var ProcessingInstruction = domhandler.ProcessingInstruction;
-var Text = domhandler.Text;
-
-var caseSensitiveTagNamesMap = {};
-var tagName;
-
-for (var i = 0, len = CASE_SENSITIVE_TAG_NAMES.length; i < len; i++) {
-  tagName = CASE_SENSITIVE_TAG_NAMES[i];
-  caseSensitiveTagNamesMap[tagName.toLowerCase()] = tagName;
-}
-
-/**
- * Gets case-sensitive tag name.
- *
- * @param  {string}           tagName - Tag name in lowercase.
- * @return {string|undefined}         - Case-sensitive tag name.
- */
-function getCaseSensitiveTagName(tagName) {
-  return caseSensitiveTagNamesMap[tagName];
-}
-
-/**
- * Formats DOM attributes to a hash map.
- *
- * @param  {NamedNodeMap} attributes - List of attributes.
- * @return {object}                  - Map of attribute name to value.
- */
-function formatAttributes(attributes) {
-  var result = {};
-  var attribute;
-  // `NamedNodeMap` is array-like
-  for (var i = 0, len = attributes.length; i < len; i++) {
-    attribute = attributes[i];
-    result[attribute.name] = attribute.value;
-  }
-  return result;
-}
-
-/**
- * Corrects the tag name if it is case-sensitive (SVG).
- * Otherwise, returns the lowercase tag name (HTML).
- *
- * @param  {string} tagName - Lowercase tag name.
- * @return {string}         - Formatted tag name.
- */
-function formatTagName(tagName) {
-  tagName = tagName.toLowerCase();
-  var caseSensitiveTagName = getCaseSensitiveTagName(tagName);
-  if (caseSensitiveTagName) {
-    return caseSensitiveTagName;
-  }
-  return tagName;
-}
-
-/**
- * Transforms DOM nodes to `domhandler` nodes.
- *
- * @param  {NodeList}     nodes         - DOM nodes.
- * @param  {Element|null} [parent=null] - Parent node.
- * @param  {string}       [directive]   - Directive.
- * @return {Array<Comment|Element|ProcessingInstruction|Text>}
- */
-function formatDOM(nodes, parent, directive) {
-  parent = parent || null;
-  var result = [];
-
-  for (var index = 0, len = nodes.length; index < len; index++) {
-    var node = nodes[index];
-    var current;
-
-    // set the node data given the type
-    switch (node.nodeType) {
-      case 1:
-        // script, style, or tag
-        current = new Element(
-          formatTagName(node.nodeName),
-          formatAttributes(node.attributes)
-        );
-        current.children = formatDOM(node.childNodes, current);
-        break;
-
-      case 3:
-        current = new Text(node.nodeValue);
-        break;
-
-      case 8:
-        current = new Comment(node.nodeValue);
-        break;
-
-      default:
-        continue;
-    }
-
-    // set previous node next
-    var prev = result[index - 1] || null;
-    if (prev) {
-      prev.next = current;
-    }
-
-    // set properties for current node
-    current.parent = parent;
-    current.prev = prev;
-    current.next = null;
-
-    result.push(current);
-  }
-
-  if (directive) {
-    current = new ProcessingInstruction(
-      directive.substring(0, directive.indexOf(' ')).toLowerCase(),
-      directive
-    );
-    current.next = result[0] || null;
-    current.parent = parent;
-    result.unshift(current);
-
-    if (result[1]) {
-      result[1].prev = result[0];
-    }
-  }
-
-  return result;
-}
-
-/**
- * Detects if browser is Internet Explorer.
- *
- * @return {boolean} - Whether IE is detected.
- */
-function isIE() {
-  return /(MSIE |Trident\/|Edge\/)/.test(navigator.userAgent);
-}
-
-module.exports = {
-  formatAttributes: formatAttributes,
-  formatDOM: formatDOM,
-  isIE: isIE
-};
-
-},{"./constants":"node_modules/html-dom-parser/lib/client/constants.js","domhandler/lib/node":"node_modules/html-dom-parser/node_modules/domhandler/lib/node.js"}],"node_modules/html-dom-parser/lib/client/domparser.js":[function(require,module,exports) {
-// constants
-var HTML = 'html';
-var HEAD = 'head';
-var BODY = 'body';
-var FIRST_TAG_REGEX = /<([a-zA-Z]+[0-9]?)/; // e.g., <h1>
-var HEAD_TAG_REGEX = /<head.*>/i;
-var BODY_TAG_REGEX = /<body.*>/i;
-
-// falls back to `parseFromString` if `createHTMLDocument` cannot be used
-var parseFromDocument = function () {
-  throw new Error(
-    'This browser does not support `document.implementation.createHTMLDocument`'
-  );
-};
-
-var parseFromString = function () {
-  throw new Error(
-    'This browser does not support `DOMParser.prototype.parseFromString`'
-  );
-};
-
-/**
- * DOMParser (performance: slow).
- *
- * @see https://developer.mozilla.org/docs/Web/API/DOMParser#Parsing_an_SVG_or_HTML_document
- */
-if (typeof window.DOMParser === 'function') {
-  var domParser = new window.DOMParser();
-  var mimeType = 'text/html';
-
-  /**
-   * Creates an HTML document using `DOMParser.parseFromString`.
-   *
-   * @param  {string} html      - The HTML string.
-   * @param  {string} [tagName] - The element to render the HTML (with 'body' as fallback).
-   * @return {HTMLDocument}
-   */
-  parseFromString = function (html, tagName) {
-    if (tagName) {
-      html = '<' + tagName + '>' + html + '</' + tagName + '>';
-    }
-
-    return domParser.parseFromString(html, mimeType);
-  };
-
-  parseFromDocument = parseFromString;
-}
-
-/**
- * DOMImplementation (performance: fair).
- *
- * @see https://developer.mozilla.org/docs/Web/API/DOMImplementation/createHTMLDocument
- */
-if (document.implementation) {
-  var isIE = require('./utilities').isIE;
-
-  // title parameter is required in IE
-  // https://msdn.microsoft.com/en-us/library/ff975457(v=vs.85).aspx
-  var doc = document.implementation.createHTMLDocument(
-    isIE() ? 'html-dom-parser' : undefined
-  );
-
-  /**
-   * Use HTML document created by `document.implementation.createHTMLDocument`.
-   *
-   * @param  {string} html      - The HTML string.
-   * @param  {string} [tagName] - The element to render the HTML (with 'body' as fallback).
-   * @return {HTMLDocument}
-   */
-  parseFromDocument = function (html, tagName) {
-    if (tagName) {
-      doc.documentElement.getElementsByTagName(tagName)[0].innerHTML = html;
-      return doc;
-    }
-
-    doc.documentElement.innerHTML = html;
-    return doc;
-  };
-}
-
-/**
- * Template (performance: fast).
- *
- * @see https://developer.mozilla.org/docs/Web/HTML/Element/template
- */
-var template = document.createElement('template');
-var parseFromTemplate;
-
-if (template.content) {
-  /**
-   * Uses a template element (content fragment) to parse HTML.
-   *
-   * @param  {string} html - The HTML string.
-   * @return {NodeList}
-   */
-  parseFromTemplate = function (html) {
-    template.innerHTML = html;
-    return template.content.childNodes;
-  };
-}
-
-/**
- * Parses HTML string to DOM nodes.
- *
- * @param  {string}   html - HTML markup.
- * @return {NodeList}
- */
-function domparser(html) {
-  var firstTagName;
-  var match = html.match(FIRST_TAG_REGEX);
-
-  if (match && match[1]) {
-    firstTagName = match[1].toLowerCase();
-  }
-
-  var doc;
-  var element;
-  var elements;
-
-  switch (firstTagName) {
-    case HTML:
-      doc = parseFromString(html);
-
-      // the created document may come with filler head/body elements,
-      // so make sure to remove them if they don't actually exist
-      if (!HEAD_TAG_REGEX.test(html)) {
-        element = doc.getElementsByTagName(HEAD)[0];
-        if (element) {
-          element.parentNode.removeChild(element);
-        }
-      }
-
-      if (!BODY_TAG_REGEX.test(html)) {
-        element = doc.getElementsByTagName(BODY)[0];
-        if (element) {
-          element.parentNode.removeChild(element);
-        }
-      }
-
-      return doc.getElementsByTagName(HTML);
-
-    case HEAD:
-    case BODY:
-      elements = parseFromDocument(html).getElementsByTagName(firstTagName);
-
-      // if there's a sibling element, then return both elements
-      if (BODY_TAG_REGEX.test(html) && HEAD_TAG_REGEX.test(html)) {
-        return elements[0].parentNode.childNodes;
-      }
-      return elements;
-
-    // low-level tag or text
-    default:
-      if (parseFromTemplate) {
-        return parseFromTemplate(html);
-      }
-
-      return parseFromDocument(html, BODY).getElementsByTagName(BODY)[0]
-        .childNodes;
-  }
-}
-
-module.exports = domparser;
-
-},{"./utilities":"node_modules/html-dom-parser/lib/client/utilities.js"}],"node_modules/html-dom-parser/lib/client/html-to-dom.js":[function(require,module,exports) {
-var domparser = require('./domparser');
-var formatDOM = require('./utilities').formatDOM;
-
-var DIRECTIVE_REGEX = /<(![a-zA-Z\s]+)>/; // e.g., <!doctype html>
-
-/**
- * Parses HTML string to DOM nodes in browser.
- *
- * @param  {string} html  - HTML markup.
- * @return {DomElement[]} - DOM elements.
- */
-function HTMLDOMParser(html) {
-  if (typeof html !== 'string') {
-    throw new TypeError('First argument must be a string');
-  }
-
-  if (html === '') {
-    return [];
-  }
-
-  // match directive
-  var match = html.match(DIRECTIVE_REGEX);
-  var directive;
-
-  if (match && match[1]) {
-    directive = match[1];
-  }
-
-  return formatDOM(domparser(html), null, directive);
-}
-
-module.exports = HTMLDOMParser;
-
-},{"./domparser":"node_modules/html-dom-parser/lib/client/domparser.js","./utilities":"node_modules/html-dom-parser/lib/client/utilities.js"}],"node_modules/html-react-parser/index.js":[function(require,module,exports) {
-var domToReact = require('./lib/dom-to-react');
-var attributesToProps = require('./lib/attributes-to-props');
-var htmlToDOM = require('html-dom-parser');
-
-var domParserOptions = { lowerCaseAttributeNames: false };
-
-/**
- * Converts HTML string to React elements.
- *
- * @param  {String}   html                    - HTML string.
- * @param  {Object}   [options]               - Parser options.
- * @param  {Object}   [options.htmlparser2]   - htmlparser2 options.
- * @param  {Object}   [options.library]       - Library for React, Preact, etc.
- * @param  {Function} [options.replace]       - Replace method.
- * @return {JSX.Element|JSX.Element[]|String} - React element(s), empty array, or string.
- */
-function HTMLReactParser(html, options) {
-  if (typeof html !== 'string') {
-    throw new TypeError('First argument must be a string');
-  }
-  if (html === '') {
-    return [];
-  }
-  options = options || {};
-  return domToReact(
-    htmlToDOM(html, options.htmlparser2 || domParserOptions),
-    options
-  );
-}
-
-HTMLReactParser.domToReact = domToReact;
-HTMLReactParser.htmlToDOM = htmlToDOM;
-HTMLReactParser.attributesToProps = attributesToProps;
-
-// support CommonJS and ES Modules
-module.exports = HTMLReactParser;
-module.exports.default = HTMLReactParser;
-
-},{"./lib/dom-to-react":"node_modules/html-react-parser/lib/dom-to-react.js","./lib/attributes-to-props":"node_modules/html-react-parser/lib/attributes-to-props.js","html-dom-parser":"node_modules/html-dom-parser/lib/client/html-to-dom.js"}],"node_modules/html-react-parser/index.mjs":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.attributesToProps = exports.htmlToDOM = exports.domToReact = void 0;
-
-var _index = _interopRequireDefault(require("./index.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var domToReact = _index.default.domToReact;
-exports.domToReact = domToReact;
-var htmlToDOM = _index.default.htmlToDOM;
-exports.htmlToDOM = htmlToDOM;
-var attributesToProps = _index.default.attributesToProps;
-exports.attributesToProps = attributesToProps;
-var _default = _index.default;
-exports.default = _default;
-},{"./index.js":"node_modules/html-react-parser/index.js"}],"src/utils/Speech.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.speak = void 0;
-var allVoices = speechSynthesis.getVoices();
-var utterance = new SpeechSynthesisUtterance();
-var allVoicesObtained = new Promise(function (resolve, reject) {
-  allVoices = speechSynthesis.getVoices();
-
-  if (allVoices.length !== 0) {
-    resolve(allVoices.filter(function (v) {
-      return v.lang === 'en-US';
-    }));
-  } else {
-    speechSynthesis.addEventListener('voiceschanged', function () {
-      allVoices = speechSynthesis.getVoices();
-      resolve(allVoices.filter(function (v) {
-        return v.lang === 'en-US';
-      }));
-    });
-  }
-});
-
-var speak = function speak(text, handleBoundary, handleEnd) {
-  allVoicesObtained.then(function (voices) {
-    utterance.text = text;
-    utterance.voice = voices[3];
-    utterance.addEventListener('boundary', handleBoundary);
-    utterance.addEventListener('end', handleEnd);
-    speechSynthesis.speak(utterance);
-  });
-};
-
-exports.speak = speak;
-},{}],"src/components/SpeechBox/SpeechBox.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/SpeechBox/SpeechBox.tsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.SpeechBox = void 0;
+exports.Shapes = void 0;
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var _htmlReactParser = _interopRequireDefault(require("html-react-parser"));
 
 var _react = _interopRequireWildcard(require("react"));
-
-var _Speech = require("../../utils/Speech");
-
-require("./SpeechBox.scss");
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var SpeechBox = function SpeechBox(props) {
-  // this code is modified from https://codersblock.com/blog/javascript-text-to-speech-and-its-many-quirks/
-  var _useState = (0, _react.useState)(props.text),
-      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
-      markedText = _useState2[0],
-      setMarkedText = _useState2[1];
-
-  var handleBoundary = function handleBoundary(event) {
-    if (event.target === 'sentence') {
-      // we only care about word boundaries
-      return;
-    }
-
-    var wordStart = event.charIndex;
-    var wordLength = event.charLength;
-
-    if (wordLength === undefined) {
-      // Safari doesn't provide charLength, so fall back to a regex to find the current word and its length (probably misses some edge cases, but good enough for this demo)
-      var match = props.text.substring(wordStart).match(/^[a-z\d']*/i);
-      if (match === null || match.length === 0) return;
-      wordLength = match[0].length;
-    } // wrap word in <mark> tag
-
-
-    var wordEnd = wordStart + wordLength;
-    var word = props.text.substring(wordStart, wordEnd);
-    setMarkedText(props.text.substring(0, wordStart) + '<mark>' + word + '</mark>' + props.text.substring(wordEnd));
-  };
-
-  (0, _react.useEffect)(function () {
-    (0, _Speech.speak)(props.text, handleBoundary, function () {
-      return setMarkedText(props.text);
-    });
-  }, []);
-  return /*#__PURE__*/_react.default.createElement(SpeechText, {
-    text: markedText
-  });
-};
-
-exports.SpeechBox = SpeechBox;
-
-var SpeechText = function SpeechText(props) {
-  return /*#__PURE__*/_react.default.createElement("div", {
-    className: 'speech'
-  }, (0, _htmlReactParser.default)(props.text));
-};
-},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","html-react-parser":"node_modules/html-react-parser/index.mjs","react":"node_modules/react/index.js","../../utils/Speech":"src/utils/Speech.ts","./SpeechBox.scss":"src/components/SpeechBox/SpeechBox.scss"}],"src/components/Game/Game.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Game/Game.tsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Game = void 0;
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var _react = _interopRequireDefault(require("react"));
 
 var _reactKonva = require("react-konva");
 
@@ -72194,27 +72383,49 @@ var _Button = require("../Button/Button");
 
 var _SpeechBox = require("../SpeechBox/SpeechBox");
 
-require("./Game.scss");
+require("./Shapes.scss");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Game = function Game() {
+var Shapes = function Shapes() {
   var _useRecoilState = (0, _recoil.useRecoilState)(_atoms.nameState),
       _useRecoilState2 = (0, _slicedToArray2.default)(_useRecoilState, 2),
       name = _useRecoilState2[0],
       setName = _useRecoilState2[1];
 
+  var _useState = (0, _react.useState)(false),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      success = _useState2[0],
+      setSuccess = _useState2[1];
+
+  var script = ["Alright! Let's get started!", 'Can you find the red square?'];
+  var rect = (0, _react.useRef)(null);
+
+  var rotate = function rotate() {
+    var _a, _b;
+
+    (_a = rect.current) === null || _a === void 0 ? void 0 : _a.rotation(0);
+    (_b = rect.current) === null || _b === void 0 ? void 0 : _b.to({
+      rotation: 360,
+      duration: 0.5
+    });
+  };
+
   return /*#__PURE__*/_react.default.createElement("div", {
     className: 'game'
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: 'controls'
-  }, /*#__PURE__*/_react.default.createElement(_Button.Button, {
+  }, /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
+    script: success ? ["Great job ".concat(name, "! You did it!")] : script
+  }), /*#__PURE__*/_react.default.createElement(_Button.Button, {
     onClick: function onClick() {
       return setName('');
     }
-  }, "Clear Name"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
-    text: "Hello ".concat(name, ". Let's get started!")
-  })), /*#__PURE__*/_react.default.createElement(_reactKonva.Stage, {
+  }, "Logout")), /*#__PURE__*/_react.default.createElement(_reactKonva.Stage, {
     height: 1000,
     width: 1000
   }, /*#__PURE__*/_react.default.createElement(_reactKonva.Layer, null, /*#__PURE__*/_react.default.createElement(_reactKonva.Rect, {
@@ -72225,117 +72436,24 @@ var Game = function Game() {
     fill: 'rgba(255, 255, 255, 0.1)',
     shadowBlur: 10
   }), /*#__PURE__*/_react.default.createElement(_reactKonva.Rect, {
-    x: 20,
-    y: 50,
+    x: 70,
+    y: 100,
+    offsetX: 50,
+    offsetY: 50,
     width: 100,
     height: 100,
-    fill: 'red',
+    fill: 'rgb(255,0,0)',
     shadowBlur: 20,
     onClick: function onClick() {
-      return alert('Great job!');
-    }
+      setSuccess(true);
+      rotate();
+    },
+    ref: rect
   }))));
 };
 
-exports.Game = Game;
-},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Game.scss":"src/components/Game/Game.scss"}],"src/components/Textbox/Textbox.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Textbox/Textbox.tsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Textbox = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-require("./Textbox.scss");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Textbox = function Textbox(props) {
-  return /*#__PURE__*/_react.default.createElement("input", {
-    className: 'textbox',
-    type: 'text',
-    name: props.name,
-    value: props.value,
-    onChange: props.onChange,
-    autoFocus: props.autofocus
-  });
-};
-
-exports.Textbox = Textbox;
-},{"react":"node_modules/react/index.js","./Textbox.scss":"src/components/Textbox/Textbox.scss"}],"src/components/Login/Login.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Login/Login.tsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Login = void 0;
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _recoil = require("recoil");
-
-var _atoms = require("../../atoms");
-
-var _Button = require("../Button/Button");
-
-var _SpeechBox = require("../SpeechBox/SpeechBox");
-
-var _Textbox = require("../Textbox/Textbox");
-
-require("./Login.scss");
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Login = function Login() {
-  var setRecoilName = (0, _recoil.useSetRecoilState)(_atoms.nameState);
-
-  var _useState = (0, _react.useState)(''),
-      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
-      name = _useState2[0],
-      setName = _useState2[1];
-
-  return /*#__PURE__*/_react.default.createElement("div", {
-    className: 'startup'
-  }, /*#__PURE__*/_react.default.createElement("span", {
-    className: 'title'
-  }, "Typing", /*#__PURE__*/_react.default.createElement("br", null), "Tuesdays"), /*#__PURE__*/_react.default.createElement(_SpeechBox.SpeechBox, {
-    text: 'Hello! Please type your name'
-  }), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement(_Textbox.Textbox, {
-    name: 'name',
-    onChange: function onChange(e) {
-      return setName(e.target.value);
-    },
-    value: name,
-    autofocus: true
-  }), /*#__PURE__*/_react.default.createElement(_Button.Button, {
-    type: 'submit',
-    onClick: function onClick(e) {
-      e.preventDefault();
-      setRecoilName(name);
-    }
-  }, "Start!")));
-};
-
-exports.Login = Login;
-},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","../Textbox/Textbox":"src/components/Textbox/Textbox.tsx","./Login.scss":"src/components/Login/Login.scss"}],"src/App.tsx":[function(require,module,exports) {
+exports.Shapes = Shapes;
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","react-konva":"node_modules/react-konva/es/ReactKonva.js","recoil":"node_modules/recoil/es/recoil.js","../../atoms":"src/atoms.ts","../Button/Button":"src/components/Button/Button.tsx","../SpeechBox/SpeechBox":"src/components/SpeechBox/SpeechBox.tsx","./Shapes.scss":"src/components/Shapes/Shapes.scss"}],"src/App.tsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72343,26 +72461,57 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _react = _interopRequireDefault(require("react"));
 
 var _recoil = require("recoil");
 
 var _atoms = require("./atoms");
 
-var _Game = require("./components/Game/Game");
-
 var _Login = require("./components/Login/Login");
+
+var _Menu = require("./components/Menu/Menu");
+
+var _Shapes = require("./components/Shapes/Shapes");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var App = function App() {
   var name = (0, _recoil.useRecoilValue)(_atoms.nameState);
-  return name === '' ? /*#__PURE__*/_react.default.createElement(_Login.Login, null) : /*#__PURE__*/_react.default.createElement(_Game.Game, null);
+
+  var _useRecoilState = (0, _recoil.useRecoilState)(_atoms.gameStateAtom),
+      _useRecoilState2 = (0, _slicedToArray2.default)(_useRecoilState, 2),
+      gameState = _useRecoilState2[0],
+      setGameState = _useRecoilState2[1];
+
+  if (name === '') {
+    setGameState('title');
+    return /*#__PURE__*/_react.default.createElement(_Login.Login, null);
+  } else if (name !== '' && gameState === 'title') {
+    setGameState('menu');
+    return /*#__PURE__*/_react.default.createElement(_Menu.Menu, null);
+  }
+
+  switch (gameState) {
+    case 'menu':
+      return /*#__PURE__*/_react.default.createElement(_Menu.Menu, null);
+
+    case 'letters':
+      return /*#__PURE__*/_react.default.createElement(_Login.Login, null);
+
+    case 'shapes':
+      return /*#__PURE__*/_react.default.createElement(_Shapes.Shapes, null);
+
+    default:
+    case 'title':
+      return /*#__PURE__*/_react.default.createElement(_Login.Login, null);
+  }
 };
 
 var _default = App;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","./atoms":"src/atoms.ts","./components/Game/Game":"src/components/Game/Game.tsx","./components/Login/Login":"src/components/Login/Login.tsx"}],"src/styles.scss":[function(require,module,exports) {
+},{"@babel/runtime/helpers/slicedToArray":"node_modules/@babel/runtime/helpers/slicedToArray.js","react":"node_modules/react/index.js","recoil":"node_modules/recoil/es/recoil.js","./atoms":"src/atoms.ts","./components/Login/Login":"src/components/Login/Login.tsx","./components/Menu/Menu":"src/components/Menu/Menu.tsx","./components/Shapes/Shapes":"src/components/Shapes/Shapes.tsx"}],"src/styles.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -72413,7 +72562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45477" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44641" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
